@@ -1,10 +1,7 @@
-# /app.py
+# app.py
+from init import create_app  # sem o ponto, porque init.py está na raiz
 
-from . import create_app
-
-# Cria a aplicação chamando a função de fábrica
 app = create_app()
 
 if __name__ == "__main__":
-    # Roda o servidor de desenvolvimento
     app.run(debug=True)

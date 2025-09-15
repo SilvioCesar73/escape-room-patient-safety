@@ -1,1 +1,1 @@
-web: gunicorn Scape_Room.wsgi:app
+web: gunicorn wsgi:app
