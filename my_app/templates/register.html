@@ -1,23 +1,23 @@
 {% extends "base.html" %}
-{% block title %}{{ text.register_title }}{% endblock %}
+{% block title %}{{ text.register_title or "Registrar" }}{% endblock %}
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-8">
         <div class="card shadow">
             <div class="card-header bg-success text-white text-center">
-                <h3 class="mb-0">{{ text.register_title }}</h3>
+                <h3 class="mb-0">{{ text.register_title or "Registrar" }}</h3>
             </div>
             <div class="card-body p-4">
                 <form method="POST">
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="username" class="form-label required">{{ text.username }}</label>
+                            <label for="username" class="form-label required">{{ text.username or "Nome" }}</label>
                             <input type="text" class="form-control" id="username" name="username" 
                                    placeholder="Digite seu nome completo" required>
                         </div>
                         
                         <div class="col-md-6 mb-3">
-                            <label for="email" class="form-label required">{{ text.email }}</label>
+                            <label for="email" class="form-label required">{{ text.email or "E-mail" }}</label>
                             <input type="email" class="form-control" id="email" name="email" 
                                    placeholder="seu.email@exemplo.com" required>
                         </div>
@@ -25,13 +25,13 @@
                     
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="password" class="form-label required">{{ text.password }}</label>
+                            <label for="password" class="form-label required">{{ text.password or "Senha" }}</label>
                             <input type="password" class="form-control" id="password" name="password" 
                                    placeholder="Digite sua senha (Mín. 8 caract.)" required>
                         </div>
                         
                         <div class="col-md-6 mb-3">
-                            <label for="confirm_password" class="form-label required">{{ text.confirm_password }}</label>
+                            <label for="confirm_password" class="form-label required">{{ text.confirm_password or "Confirmar Senha" }}</label>
                             <input type="password" class="form-control" id="confirm_password" 
                                    name="confirm_password" placeholder="Repita a senha" required>
                         </div>
@@ -39,7 +39,7 @@
                     
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="profession" class="form-label required">{{ text.profession }}</label>
+                            <label for="profession" class="form-label required">{{ text.profession or "Profissão" }}</label>
                             <select class="form-select" id="profession" name="profession" required>
                                 <option value="" selected disabled>Selecione sua profissão</option>
                                 {% for profession in professions %}
@@ -49,7 +49,7 @@
                         </div>
                         
                         <div class="col-md-6 mb-3">
-                            <label for="country" class="form-label required">{{ text.country }}</label>
+                            <label for="country" class="form-label required">{{ text.country or "País" }}</label>
                             <select class="form-select" id="country" name="country" required>
                                 <option value="" selected disabled>Selecione seu país</option>
                                 {% for country in countries %}
@@ -61,7 +61,7 @@
                     
                     <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-success btn-lg" id="submit-register-btn">
-                            <i class="bi bi-person-plus-fill me-2"></i>{{ text.submit }}
+                            <i class="bi bi-person-plus-fill me-2"></i>{{ text.submit or "Registrar" }}
                         </button>
                     </div>
                 </form>
@@ -69,14 +69,14 @@
                 <div class="text-center mt-3">
                     <a href="{{ url_for('home_pt') if 'lang' not in session else url_for('home_' + session['lang']) }}" 
                        class="text-decoration-none">
-                        <i class="bi bi-arrow-left"></i> {{ text.back_home }}
+                        <i class="bi bi-arrow-left"></i> {{ text.back_home or "Voltar" }}
                     </a>
                 </div>
             </div>
         </div>
         
         <div class="text-center mt-3">
-            <p>Já tem uma conta? <a href="{{ url_for('login') }}">{{ text.login }}</a></p>
+            <p>Já tem uma conta? <a href="{{ url_for('login') }}">{{ text.login or "Entrar" }}</a></p>
         </div>
     </div>
 </div>
