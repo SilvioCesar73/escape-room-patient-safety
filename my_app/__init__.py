@@ -7,15 +7,16 @@ import hashlib
 from datetime import datetime, date, timedelta
 from flask import Flask, render_template, redirect, url_for, request, session, jsonify
 from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
 from .config import config
-from .models import db, User, PageViews, SiteAccess
-
+from .models import *
 
 # Importa os dados dos desafios para serem usados nas rotas
 from .challenges_data import challenges
 
 # Inicializa as extensões sem uma aplicação específica ainda
-migrate = Migrate()
+migrate = Migrate()  # ← inicializa sem app ainda
+
 
 def create_app(config_name='development'):
     """
