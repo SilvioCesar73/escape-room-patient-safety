@@ -1,4 +1,5 @@
-# wsgi.py
-from __init__ import create_app
+# /Scape_Room/wsgi.py
+
+from . import create_app
 
 app = create_app()
