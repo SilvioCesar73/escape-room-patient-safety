@@ -1,5 +1,6 @@
 # app.py
-from init import create_app  # sem o ponto, porque init.py está na raiz
+from __init__ import create_app
+
 
 app = create_app()
 
