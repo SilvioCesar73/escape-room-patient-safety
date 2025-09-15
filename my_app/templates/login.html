@@ -22,21 +22,26 @@
                     </div>
                     
                     <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary btn-lg">{{ text.login }}</button>
+                        <button type="submit" class="btn btn-primary btn-lg">
+                                {{ text.login or "Entrar" }}
+                        </button>
                     </div>
+                    
                 </form>
                 
                 <div class="text-center mt-3">
                     <a href="{{ url_for('home_pt') if 'lang' not in session else url_for('home_' + session['lang']) }}" 
                        class="text-decoration-none">
-                        <i class="bi bi-arrow-left"></i> {{ text.back_home }}
+                        <i class="bi bi-arrow-left"></i> {{ text.back_home or "Voltar para Início" }}
                     </a>
                 </div>
             </div>
         </div>
         
-        <div class="text-center mt-3">
-            <p>Não tem uma conta? <a href="{{ url_for('register') }}">{{ text.signup }}</a></p>
+        <div class="text-center mt-3">         
+            <p>Não tem uma conta? 
+                <a href="{{ url_for('register') }}">{{ text.signup or "Registrar" }}</a>
+            </p>
         </div>
     </div>
 </div>
