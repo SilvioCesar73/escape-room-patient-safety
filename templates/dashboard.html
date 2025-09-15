@@ -1,0 +1,681 @@
+<!-- dashboard.html -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Progresso</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <style>
+        .dashboard-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem 0;
+        }
+        
+        .progress-ring {
+            width: 120px;
+            height: 120px;
+        }
+        
+        .stat-card {
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-3px);
+        }
+        
+        .escape-room-theme {
+            background-color: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+        
+        .theme-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            background-color: #667eea;
+            color: white;
+            border-radius: 50%;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        .user-status-bar {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+            padding: 0.5rem 0;
+        }
+        
+        .user-id-badge {
+            font-size: 0.8rem;
+            background-color: #e9ecef;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            margin-left: 10px;
+        }
+
+        /* pequeno ajuste visual do troféu */
+        #achievement-badge span {
+            font-size: 48px;
+            line-height: 1;
+            display: inline-block;
+        }
+        #achievement-caption {
+            font-weight: 600;
+            margin-top: .25rem;
+        }
+
+        .stat-card {
+            transition: transform 0.3s ease;
+            height: 100%; /* garante altura igual */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .stat-card .card-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Barra de status do usuário -->
+    <div class="user-status-bar">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <span id="user-greeting">Olá, Carregando...</span>
+                    <span id="user-id-badge" class="user-id-badge d-none">
+                        ID: <span id="user-id"></span>
+                    </span>
+                </div>
+                <div>
+                    <a href="#" class="btn btn-outline-secondary btn-sm" id="logout-btn">
+                        <i class="bi bi-box-arrow-right me-1"></i>Sair
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header do Dashboard -->
+    <header class="dashboard-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-12">
+                    <h1 class="display-4 fw-bold">Escape Room da Segurança do Paciente</h1>
+                    <p class="lead">Garantindo segurança para recém-nascidos e crianças através da simulação</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container-fluid py-4">
+        <!-- Estatísticas Gerais (ATUALIZADO: 3 cards + botão relatório) -->
+        <!-- Estatísticas Gerais -->
+<div class="row mb-3 align-items-stretch">
+    <div class="col-md-4">
+        <div class="card stat-card border-success h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-star-fill text-success display-4 mb-2"></i>
+                <h3 id="average-score">0%</h3>
+                <p class="text-muted">Pontuação Média</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card stat-card border-warning h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-clock-fill text-warning display-4 mb-2"></i>
+                <h3 id="time-spent">0h</h3>
+                <p class="text-muted">Tempo Total</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card stat-card border-info h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-trophy-fill text-info display-4 mb-2"></i>
+                <div id="achievement-badge" class="my-1"></div>
+                <div id="achievement-caption" class="text-muted">Conquistas</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+        <!-- Botão de relatório -->
+        <div class="row mb-4">
+            <div class="col-12 text-center">
+                <button id="btn-generate-report" 
+                    class="btn btn-outline-primary" 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#reportModal">
+                    <i class="bi bi-file-earmark-text me-2"></i>Relatório de desempenho
+                </button>
+            </div>
+        </div>
+
+        <!-- Orientações do Scape Room (INALTERADO) -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h4>Orientações do Scape Room</h4>
+                        <a href="{{ url_for('station') }}" class="btn btn-primary">
+                            <i class="bi bi-play-fill me-2"></i>Iniciar Desafio
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info mb-4">
+                            <h5><i class="bi bi-info-circle-fill me-2"></i>Como Jogar</h5>
+                            <p class="mb-0">Este é um jogo de escape room educacional com 15 estações temáticas. Complete cada estação para liberar a chave que dará acesso à próxima. Sua pontuação final será baseada no tempo total gasto e na precisão das respostas.</p>
+                        </div>
+                        
+                        <div class="alert alert-warning mb-4">
+                            <h5><i class="bi bi-clock-fill me-2"></i>Importância do Tempo</h5>
+                            <p class="mb-0">O tempo é um fator crucial para sua pontuação final. Quanto mais rápido você completar todas as estações, maior será sua pontuação. Mas lembre-se: a precisão também conta! Respostas incorretas podem resultar em penalidades de tempo.</p>
+                        </div>
+                        
+                        <div class="alert alert-success mb-4">
+                            <h5><i class="bi bi-key-fill me-2"></i>Sistema de Chaves</h5>
+                            <p class="mb-0">Cada estação liberará uma chave virtual quando concluída com sucesso. Esta chave é necessária para desbloquear a próxima estação. O progresso é sequencial - você precisa completar uma estação antes de avançar para a próxima.</p>
+                        </div>
+                        
+                        <h5 class="mb-3">Temas das 15 Estações:</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="escape-room-theme">
+                                    <span class="theme-number">1</span>
+                                    <strong>Identificação Segura do Recém-nascido</strong>
+                                </div>
+                                <div class="escape-room-theme">
+                                    <span class="theme-number">2</span>
+                                    <strong>Administração de Medicamentos na Pediatria</strong>
+                                </div>
+                                <div class="escape-room-theme">
+                                    <span class="theme-number">3</span>
+                                    <strong>Higienização das Mãos e Prevenção de Infecções</strong>
+                                </div>
+                                <div class="escape-room-theme">
+                                    <span class="theme-number">4</span>
+                                    <strong>Segurança no Manejo da Nutrição Enteral</strong>
+                                </div>
+                                <div class="escape-room-theme">
+                                    <span class="theme-number">5</span>
+                                    <strong>Monitorização Clínica em UTI Pediátrica</strong>
+                                </div>
+                                <div class="escape-room-theme">
+                                    <span class="theme-number">6</span>
+                                    <strong>Prevenção de Quedas em Pediatria</strong>
+                                </div>
+                                <div class="escape-room-theme">
+                                    <span class="theme-number">7</span>
+                                    <strong>Cuidados com Dispositivos Invasivos</strong>
+                                </div>
+                                <div class="escape-room-theme">
+                                    <span class="theme-number">8</span>
+                                    <strong>Comunicação Efetiva na Transição do Cuidado</strong>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="escape-room-theme">
+                                    <span class="theme-number">9</span>
+                                    <strong>Reconhecimento Precose de Sinais de Sepse</strong>
+                                </div>
+                                <div class="escape-room-theme">
+                                    <span class="theme-number">10</span>
+                                    <strong>Segurança na Ventilação Mecânica</strong>
+                                </div>
+                                <div class="escape-room-theme">
+                                    <span class="theme-number">11</span>
+                                    <strong>Segurança na Transfusão de Hemoderivados</strong>
+                                </div>
+                                <div class="escape-room-theme">
+                                    <span class="theme-number">12</span>
+                                    <strong>Prevenção de Lesão por Pressão em Recém-nascidos e Crianças</strong>
+                                </div>
+                                <div class="escape-room-theme">
+                                    <span class="theme-number">13</span>
+                                    <strong>Manejo da Dor em Neonatos no Berçário</strong>
+                                </div>
+                                <div class="escape-room-theme">
+                                    <span class="theme-number">14</span>
+                                    <strong>Passagem de Plantão Segura entre a Equipe</strong>
+                                </div>
+                                <div class="escape-room-theme">
+                                    <span class="theme-number">15</span>
+                                    <strong>Segurança Cirúrgica em Pediatria e Neonatologia</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class DashboardManager {
+            constructor() {
+                this.userProgress = {};
+                this.gameStats = {};
+                this.userName = '';
+                this.userId = '';
+
+                // Pontos máximos por estação (iguais aos exibidos na página Station)
+                this.MAX_POINTS = {
+                    1: 5,  2: 7,  3: 4,  4: 6,  5: 8,
+                    6: 5,  7: 8,  8: 5,  9: 6, 10: 9,
+                    11: 8, 12: 6, 13: 7, 14: 5, 15: 11
+                };
+
+                this.stationResults = {};   // { station_id: {score, time_spent} }
+                this.totalScore = 0;
+                this.initialize();
+            }
+
+            async initialize() {
+                await this.loadUserData();
+                await this.loadLocalProgress();   // mantém compatibilidade com o que já existia
+                await this.loadStationResults();  // NOVO: dados reais do backend
+                this.updateDashboard();
+                this.setupEventListeners();
+            }
+
+            async loadUserData() {
+                try {
+                    const response = await fetch('/api/user-data');
+                    if (response.ok) {
+                        const userData = await response.json();
+                        this.userName = userData.username || 'Participante';
+                        this.userId = userData.user_id || '';
+                        document.getElementById('user-greeting').textContent = `Olá, ${this.userName}`;
+                        if (this.userId) {
+                            document.getElementById('user-id').textContent = this.userId;
+                            document.getElementById('user-id-badge').classList.remove('d-none');
+                        }
+                    } else {
+                        this.userName = 'Participante';
+                        document.getElementById('user-greeting').textContent = `Olá, ${this.userName}`;
+                    }
+                } catch (error) {
+                    console.error('Erro ao carregar dados do usuário:', error);
+                    this.userName = 'Participante';
+                    document.getElementById('user-greeting').textContent = `Olá, ${this.userName}`;
+                }
+            }
+
+            // Mantém o que você já tinha (não usamos mais para as métricas principais,
+            // mas deixo por compatibilidade)
+            async loadLocalProgress() {
+                this.userProgress = JSON.parse(localStorage.getItem('userGameProgress') || '{}');
+                this.gameStats    = JSON.parse(localStorage.getItem('gameStatistics') || '{}');
+            }
+
+            // NOVO: busca resultados reais salvos no banco
+            async loadStationResults() {
+                try {
+                    const res = await fetch('/api/get_station_results');
+                    if (!res.ok) return;
+                    const data = await res.json();
+                    if (!data.success) return;
+
+                    this.totalScore     = data.total_score || 0;
+                    this.stationResults = data.stations || {};
+                } catch (e) {
+                    console.warn('Não foi possível carregar /api/get_station_results:', e);
+                }
+            }
+
+            updateDashboard() {
+                this.updateOverallStats();
+            }
+
+            // Helpers
+            _formatHM(totalSeconds) {
+                const h = Math.floor(totalSeconds / 3600);
+                const m = Math.floor((totalSeconds % 3600) / 60);
+                return `${h}h ${m}m`;
+            }
+
+            _renderTrophy(percentage) {
+                const el = document.getElementById('achievement-badge');
+                let emoji = '—';
+                let caption = 'Fora do pódio';
+
+                if (percentage >= 85) {
+                    emoji = '🥇'; caption = 'Ouro';
+                } else if (percentage >= 65) {
+                    emoji = '🥈'; caption = 'Prata';
+                } else if (percentage >= 40) {
+                    emoji = '🥉'; caption = 'Bronze';
+                }
+
+                el.innerHTML = `<span>${emoji}</span><div id="achievement-caption" class="text-muted">${caption}</div>`;
+            }
+
+            updateOverallStats() {
+                // Se houver resultados reais, usamos eles para calcular as métricas
+                const stationIds = Object.keys(this.stationResults).map(k => parseInt(k, 10));
+
+                // Soma dos tempos
+                const totalSeconds = stationIds.reduce((acc, id) => acc + (this.stationResults[id]?.time_spent || 0), 0);
+                document.getElementById('time-spent').textContent = this._formatHM(totalSeconds);
+
+                // Pontuação média em %
+                const totalMaxPoints = stationIds.reduce((acc, id) => acc + (this.MAX_POINTS[id] || 0), 0);
+                let avgPct = 0;
+                if (totalMaxPoints > 0) {
+                    avgPct = Math.round((this.totalScore / totalMaxPoints) * 100);
+                }
+                document.getElementById('average-score').textContent = `${avgPct}%`;
+
+                // Troféu (pódio)
+                this._renderTrophy(avgPct);
+            }
+
+            setupEventListeners() {
+                // Logout (mantido como estava)
+                document.getElementById('logout-btn').addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    if (confirm('Tem certeza que deseja sair?')) {
+                        try {
+                            const response = await fetch('/logout', { method: 'POST' });
+                            if (response.ok || response.redirected) {
+                                localStorage.removeItem('userGameProgress');
+                                localStorage.removeItem('gameStatistics');
+                                window.location.href = "{{ url_for('home_pt') }}";
+                            } else {
+                                window.location.href = "{{ url_for('home_pt') }}";
+                            }
+                        } catch (error) {
+                            window.location.href = "{{ url_for('home_pt') }}";
+                        }
+                    }
+                });
+
+              
+            }
+
+            // Mantém API p/ atualizar progresso local (compatibilidade)
+            updateGameProgress(gameId, score) {
+                this.userProgress[gameId] = Math.max(this.userProgress[gameId] || 0, score);
+                this.gameStats[gameId] = {
+                    lastAttempt: new Date().toLocaleDateString('pt-BR'),
+                    timeSpent: (this.gameStats[gameId]?.timeSpent || 0) + 5
+                };
+                localStorage.setItem('userGameProgress', JSON.stringify(this.userProgress));
+                localStorage.setItem('gameStatistics', JSON.stringify(this.gameStats));
+                this.updateDashboard();
+            }
+        }
+
+        // Inicializar dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            window.dashboardManager = new DashboardManager();
+        });
+    </script>
+
+
+    <!-- Modal de Avaliação e Relatório -->
+<div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title d-flex align-items-center" id="reportModalLabel">
+          <i class="bi bi-ui-checks-grid me-2"></i>Avaliação da Plataforma
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
+
+      <form id="reportForm">
+        <div class="modal-body">
+          <!-- Caracterização do usuário -->
+          <div class="mb-3">
+            <label class="form-label">Tipo de participante</label>
+            <select class="form-select" id="participantType" required>
+              <option value="">Selecione...</option>
+              <option value="estudante">Estudante</option>
+              <option value="profissional">Profissional</option>
+              <option value="professor">Professor/Instrutor</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Tipo de participação</label>
+            <select class="form-select" id="participationType" required>
+              <option value="">Selecione...</option>
+              <option value="sozinho">Sozinho</option>
+              <option value="equipe">Em equipe</option>
+            </select>
+          </div>
+
+          <div id="teamFields" class="mb-3 d-none">
+            <label class="form-label">Membros da equipe (primeiro = líder, obrigatório)</label>
+            <input type="text" class="form-control mb-2" id="teamLeader" placeholder="Líder da equipe">
+            <input type="text" class="form-control mb-2" id="member2" placeholder="Membro 2 (opcional)">
+            <input type="text" class="form-control mb-2" id="member3" placeholder="Membro 3 (opcional)">
+            <input type="text" class="form-control mb-2" id="member4" placeholder="Membro 4 (opcional)">
+            <input type="text" class="form-control mb-2" id="member5" placeholder="Membro 5 (opcional)">
+            <input type="text" class="form-control mb-2" id="member6" placeholder="Membro 6 (opcional)">
+          </div>
+
+          <hr>
+
+          <!-- Perguntas de avaliação -->
+          <div class="mb-3">
+            <label class="form-label">1. A plataforma foi fácil de usar?</label>
+            <select class="form-select" id="q1" required>
+              <option value="">Selecione...</option>
+              <option value="5">Muito fácil</option>
+              <option value="4">Fácil</option>
+              <option value="3">Neutro</option>
+              <option value="2">Difícil</option>
+              <option value="1">Muito difícil</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">2. O conteúdo ajudou no aprendizado?</label>
+            <select class="form-select" id="q2" required>
+              <option value="">Selecione...</option>
+              <option value="5">Muito</option>
+              <option value="4">Bastante</option>
+              <option value="3">Razoavelmente</option>
+              <option value="2">Pouco</option>
+              <option value="1">Nada</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">3. O design e a interface foram satisfatórios?</label>
+            <select class="form-select" id="q3" required>
+              <option value="">Selecione...</option>
+              <option value="5">Muito satisfatórios</option>
+              <option value="4">Bons</option>
+              <option value="3">Neutros</option>
+              <option value="2">Ruins</option>
+              <option value="1">Muito ruins</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">4. Recomendaria a plataforma para colegas?</label>
+            <select class="form-select" id="q4" required>
+              <option value="">Selecione...</option>
+              <option value="5">Certamente</option>
+              <option value="4">Provavelmente</option>
+              <option value="3">Talvez</option>
+              <option value="2">Provavelmente não</option>
+              <option value="1">De jeito nenhum</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="q5" class="form-label">5. Pontos fortes (opcional)</label>
+            <textarea class="form-control" id="q5" rows="2"></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label for="q6" class="form-label">6. O que pode melhorar? (opcional)</label>
+            <textarea class="form-control" id="q6" rows="2"></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+        <button type="submit" class="btn btn-success" id="submitEvaluationBtn" disabled>
+            <i class="bi bi-send me-1"></i>Enviar Avaliação
+        </button>
+
+          <button type="button" class="btn btn-primary" id="generateReportBtn" disabled>
+            <i class="bi bi-printer me-1"></i>Gerar Relatório
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  console.log("✅ Script de avaliação carregado");
+
+  const reportForm        = document.getElementById("reportForm");
+  const participationType = document.getElementById("participationType");
+  const teamFields        = document.getElementById("teamFields");
+  const teamLeader        = document.getElementById("teamLeader");
+  const submitBtn         = document.getElementById("submitEvaluationBtn");
+  const generateReportBtn = document.getElementById("generateReportBtn");
+
+  // Mostrar/esconder campos de equipe
+  participationType.addEventListener("change", function() {
+    if (this.value === "equipe") {
+      teamFields.classList.remove("d-none");
+      teamLeader.setAttribute("required", "true");
+    } else {
+      teamFields.classList.add("d-none");
+      teamLeader.removeAttribute("required");
+    }
+    checkFormValidity();
+  });
+
+  // Função para verificar se todos os obrigatórios estão preenchidos
+  function checkFormValidity() {
+    const participantType = document.getElementById("participantType").value;
+    const participation   = participationType.value;
+    const q1 = document.getElementById("q1").value;
+    const q2 = document.getElementById("q2").value;
+    const q3 = document.getElementById("q3").value;
+    const q4 = document.getElementById("q4").value;
+    const leader = document.getElementById("teamLeader").value;
+
+    let isValid = participantType && participation && q1 && q2 && q3 && q4;
+
+    if (participation === "equipe") {
+      isValid = isValid && leader.trim() !== "";
+    }
+
+    submitBtn.disabled = !isValid;
+  }
+
+  // Monitorar mudanças nos campos
+  reportForm.addEventListener("input", checkFormValidity);
+  reportForm.addEventListener("change", checkFormValidity);
+
+// Submissão da avaliação
+reportForm.addEventListener("submit", async function(e) {
+  e.preventDefault();
+
+  const data = {
+    participantType: document.getElementById("participantType").value,
+    participationType: participationType.value,
+    team: [
+      document.getElementById("teamLeader").value,
+      document.getElementById("member2").value,
+      document.getElementById("member3").value,
+      document.getElementById("member4").value,
+      document.getElementById("member5").value,
+      document.getElementById("member6").value,
+    ].filter(Boolean),
+    q1: document.getElementById("q1").value,
+    q2: document.getElementById("q2").value,
+    q3: document.getElementById("q3").value,
+    q4: document.getElementById("q4").value,
+    q5: document.getElementById("q5").value.trim(),
+    q6: document.getElementById("q6").value.trim(),
+  };
+
+  try {
+    const res = await fetch("/api/save_evaluation", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+
+    const result = await res.json();
+    if (result.success) {
+      generateReportBtn.removeAttribute("disabled");
+      alert("✅ Avaliação salva com sucesso! Agora você pode gerar o relatório.");
+    } else {
+      alert("❌ Erro ao salvar avaliação: " + (result.error || "desconhecido"));
+    }
+  } catch (err) {
+    console.error("Erro ao salvar avaliação:", err);
+    alert("❌ Falha ao conectar com o servidor.");
+  }
+});
+
+
+});
+
+
+</script>
+
+
+<!-- Bootstrap JS (necessário para o modal funcionar) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+document.getElementById("generateReportBtn").addEventListener("click", async () => {
+    try {
+        const response = await fetch("/api/generate_report");
+        if (!response.ok) {
+            alert("Erro ao gerar o relatório.");
+            return;
+        }
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "relatorio.pdf";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+    } catch (error) {
+        console.error("Erro:", error);
+        alert("Falha ao gerar o relatório.");
+    }
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,690 @@
+{% extends "base.html" %}
+{% block title %}Estação 1 - Identificação do Recém-Nascido{% endblock %}
+{% block content %}
+<div class="container-fluid">
+    <!-- Cabeçalho com Informações -->
+    <div class="row bg-light py-3 mb-3">
+        <div class="col-md-8">
+            <h4>Estação 1: Identificação Segura do Recém-Nascido</h4>
+            <p class="mb-1">Verifique os protocolos de identificação do recém-nascido na maternidade</p>
+            <small class="text-muted">⏰ Tempo estimado: 15 minutos | 🎯 Pontuação máxima: 15 pontos</small>
+        </div>
+        <div class="col-md-4 text-end">
+            <div class="text-danger">
+                ⏰ Tempo Total: <span id="total-timer">00:00:00</span>
+            </div>
+            <div class="text-success mb-2">
+                🏆 Pontuação: <span id="current-score">0</span>/15 pontos
+            </div>
+            <button class="btn btn-sm btn-outline-secondary" onclick="exitStation()">
+                🚪 Voltar ao Dashboard
+            </button>
+        </div>
+    </div>
+
+    <!-- Área Interativa -->
+    <div class="row">
+        <div class="col-12">
+            <div class="station-container" style="position: relative; background-color: #f8f9fa; min-height: 600px; border-radius: 10px;">
+                <!-- Imagem de Fundo -->
+                <img src="{{ url_for('static', filename='img/stations/station1-maternidade.jpg') }}" 
+                     alt="Área de Maternidade" 
+                     class="img-fluid station-background"
+                     style="width: 100%; height: 600px; object-fit: cover; border-radius: 10px;">
+
+                <!-- Elemento 1: Pulseira de Identificação -->
+                <button class="btn btn-primary station-hotspot"
+                        style="position: absolute; top: 40%; left: 35%;"
+                        onclick="examineItem('pulseira')">
+                    📋 Pulseira de Identificação
+                </button>
+
+                <!-- Elemento 2: Documentação -->
+                <button class="btn btn-warning station-hotspot"
+                        style="position: absolute; top: 60%; left: 20%;"
+                        onclick="examineItem('documentacao')">
+                    📄 Documentação do RN
+                </button>
+
+                <!-- Elemento 3: Leitor de Código -->
+                <button class="btn btn-info station-hotspot"
+                        style="position: absolute; top: 50%; left: 70%;"
+                        onclick="examineItem('leitor')">
+                    📟 Leitor de Código
+                </button>
+
+                <!-- Elemento 4: Área de Conferência -->
+                <button class="btn btn-success station-hotspot"
+                        style="position: absolute; top: 30%; left: 55%;"
+                        onclick="examineItem('conferencia')">
+                    ✅ Área de Conferência
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Painel de Controle -->
+    <div class="row mt-4">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5>📝 Registro de Verificações</h5>
+                    <span id="exploration-progress" class="badge bg-warning">Itens explorados: 0/4</span>
+                </div>
+                <div class="card-body">
+                    <div id="action-log" style="max-height: 200px; overflow-y: auto;">
+                        <p class="text-muted">Nenhuma verificação realizada ainda...</p>
+                    </div>
+                    
+                    <!-- Formulário de Respostas -->
+                    <div class="mt-3" id="questions-section" style="display: none;">
+                        <h6>Perguntas da Estação:</h6>
+                        
+                        <!-- Pergunta 1 -->
+                        <div class="mb-3 question-container" id="question-1">
+                            <label class="form-label fw-bold">1. Quais informações devem constar na pulseira de identificação?</label>
+                            <div class="options-container mb-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q1" id="q1a" value="a">
+                                    <label class="form-check-label" for="q1a">A) Apenas nome da mãe e data de nascimento</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q1" id="q1b" value="b">
+                                    <label class="form-check-label" for="q1b">B) Nome da mãe, data de nascimento, número de identificação, sexo do RN, alertas</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q1" id="q1c" value="c">
+                                    <label class="form-check-label" for="q1c">C) Nome do médico, horário do parto, peso ao nascer</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q1" id="q1d" value="d">
+                                    <label class="form-check-label" for="q1d">D) Número do quarto e horário de visitas</label>
+                                </div>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-sm btn-success" onclick="confirmAnswer(1)">✅ Confirmar Resposta</button>
+                                <button class="btn btn-sm btn-outline-primary" onclick="requestQuestionHint(1)">💡 Dica (3 pts)</button>
+                            </div>
+                            <div class="feedback mt-2" id="feedback-1"></div>
+                        </div>
+                        
+                        <!-- Pergunta 2 -->
+                        <div class="mb-3 question-container" id="question-2">
+                            <label class="form-label fw-bold">2. Como deve ser feita a conferência entre pulseira e documentação?</label>
+                            <div class="options-container mb-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q2" id="q2a" value="a">
+                                    <label class="form-check-label" for="q2a">A) Por um único profissional</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q2" id="q2b" value="b">
+                                    <label class="form-check-label" for="q2b">B) Por dois profissionais diferentes</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q2" id="q2c" value="c">
+                                    <label class="form-check-label" for="q2c">C) Apenas pelo enfermeiro chefe</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q2" id="q2d" value="d">
+                                    <label class="form-check-label" for="q2d">D) Não é necessária conferência</label>
+                                </div>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-sm btn-success" onclick="confirmAnswer(2)">✅ Confirmar Resposta</button>
+                                <button class="btn btn-sm btn-outline-primary" onclick="requestQuestionHint(2)">💡 Dica (3 pts)</button>
+                            </div>
+                            <div class="feedback mt-2" id="feedback-2"></div>
+                        </div>
+                        
+                        <!-- Pergunta 3 -->
+                        <div class="mb-3 question-container" id="question-3">
+                            <label class="form-label fw-bold">3. Qual o procedimento em caso de discordância de informações?</label>
+                            <div class="options-container mb-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q3" id="q3a" value="a">
+                                    <label class="form-check-label" for="q3a">A) Ignorar e prosseguir</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q3" id="q3b" value="b">
+                                    <label class="form-check-label" for="q3b">B) Registrar a discordância e continuar</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q3" id="q3c" value="c">
+                                    <label class="form-check-label" for="q3c">C) Suspender o processo e refazer toda a identificação</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="q3" id="q3d" value="d">
+                                    <label class="form-check-label" for="q3d">D) Consultar apenas um supervisor</label>
+                                </div>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-sm btn-success" onclick="confirmAnswer(3)">✅ Confirmar Resposta</button>
+                                <button class="btn btn-sm btn-outline-primary" onclick="requestQuestionHint(3)">💡 Dica (3 pts)</button>
+                            </div>
+                            <div class="feedback mt-2" id="feedback-3"></div>
+                        </div>
+
+                        <!-- Botão de Finalizar -->
+                        <div class="text-center mt-4">
+                            <button class="btn btn-lg btn-success" onclick="submitStation()" id="submit-btn" disabled>
+                                ✅ Finalizar Estação
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <!-- Painel de Progresso -->
+            <div class="card mb-3">
+                <div class="card-header bg-info text-white">
+                    <h5>📊 Progresso</h5>
+                </div>
+                <div class="card-body text-center">
+                    <div class="display-6 text-primary" id="stations-completed">0/15</div>
+                    <small>Estações Concluídas</small>
+                    <div class="progress mt-2" style="height: 10px;">
+                        <div class="progress-bar" id="progress-bar" style="width: 0%;"></div>
+                    </div>
+                    <div class="mt-3">
+                        <small>Chaves conquistadas:</small>
+                        <div id="keys-earned"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Painel de Instruções -->
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <h5>ℹ️ Instruções</h5>
+                </div>
+                <div class="card-body">
+                    <ol class="small">
+                        <li>Explore todos os 4 elementos interativos</li>
+                        <li>Responda as 3 perguntas de múltipla escolha</li>
+                        <li>Use dicas se necessário (custo: 3 pontos cada)</li>
+                        <li>Conquiste sua chave para a próxima estação</li>
+                    </ol>
+                    <div class="alert alert-warning small">
+                        <strong>Pontuação:</strong><br>
+                        • Itens explorados: 2 pts cada (8 pts)<br>
+                        • Perguntas corretas: 2 pts cada (6 pts)<br>
+                        • Bônus: 1 pt por não usar dicas
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para exibir detalhes -->
+<div class="modal fade" id="detailModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Detalhes</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="modalContent">
+                <!-- Conteúdo dinâmico -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para dicas -->
+<div class="modal fade" id="hintModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">💡 Dica</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="hintContent">
+                <!-- Conteúdo dinâmico -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de conquista -->
+<div class="modal fade" id="achievementModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">🏆 Conquista Desbloqueada!</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center" id="achievementContent">
+                <div class="display-1">🔑</div>
+                <h4>Chave de Identificação</h4>
+                <p>Você desbloqueou a chave para a próxima estação!</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal">Continuar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.station-hotspot {
+    transition: all 0.3s ease;
+    border: 2px dashed transparent;
+    border-radius: 25px;
+    padding: 10px 15px;
+    font-weight: 500;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.station-hotspot:hover {
+    border-color: #ffc107;
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.station-container {
+    position: relative;
+    overflow: hidden;
+    border: 2px solid #dee2e6;
+    border-radius: 10px;
+}
+
+#action-log p {
+    border-left: 3px solid #007bff;
+    padding-left: 10px;
+    margin-bottom: 5px;
+}
+
+.question-container {
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    border-left: 4px solid #0d6efd;
+}
+
+.options-container {
+    padding: 10px;
+    background-color: white;
+    border-radius: 5px;
+}
+
+.feedback {
+    min-height: 40px;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.correct {
+    background-color: #d4edda;
+    border-left: 4px solid #28a745;
+    color: #155724;
+}
+
+.incorrect {
+    background-color: #f8d7da;
+    border-left: 4px solid #dc3545;
+    color: #721c24;
+}
+
+.answered {
+    opacity: 0.7;
+}
+
+.answered .options-container {
+    pointer-events: none;
+}
+
+.answered .btn {
+    display: none;
+}
+</style>
+
+<script>
+// Dados da estação
+const stationData = {
+    pulseira: {
+        title: "Pulseira de Identificação",
+        content: `<p>A pulseira deve conter:</p>
+                 <ul>
+                     <li>Nome completo da mãe</li>
+                     <li>Data e hora de nascimento</li>
+                     <li>Número de identificação único</li>
+                     <li>Sexo do recém-nascido</li>
+                     <li>Alerta de alergias (se houver)</li>
+                 </ul>
+                 <p class="text-danger">⚠️ Deve ser colocada imediatamente após o nascimento</p>`
+    },
+    documentacao: {
+        title: "Documentação do Recém-Nascido",
+        content: `<p>Documentos necessários:</p>
+                 <ul>
+                     <li>Declaração de Nascido Vivo</li>
+                     <li>Registro de identificação</li>
+                     <li>Termo de consentimento</li>
+                     <li>Registro de exames realizados</li>
+                 </ul>`
+    },
+    leitor: {
+        title: "Leitor de Código de Barras",
+        content: `<p>Equipamento para leitura das pulseiras codificadas:</p>
+                 <ul>
+                     <li>Deve ser validado diariamente</li>
+                     <li>Conferir compatibilidade com o sistema</li>
+                     <li>Manter bateria carregada</li>
+                     <li>Procedimento de limpeza adequado</li>
+                 </ul>`
+    },
+    conferencia: {
+        title: "Área de Conferência",
+        content: `<p>Local para verificação final:</p>
+                 <ul>
+                     <li>Conferir pulseira × documentação</li>
+                     <li>Verificar com dois profissionais</li>
+                     <li>Registrar no sistema a conferência</li>
+                     <li>Local bem iluminado e silencioso</li>
+                 </ul>`
+    }
+};
+
+// Dados das perguntas e respostas
+const questionsData = {
+    1: {
+        correctAnswer: "b",
+        explanation: "A pulseira deve conter informações completas para garantir uma identificação segura e única do recém-nascido, incluindo nome da mãe, data de nascimento, número de identificação, sexo e alertas de alergias se houver.",
+        hint: "Lembre-se que a pulseira deve permitir identificação única e segura do recém-nascido em qualquer situação, mesmo fora do berçário."
+    },
+    2: {
+        correctAnswer: "b", 
+        explanation: "A conferência deve ser realizada por dois profissionais diferentes para garantir que não haja erro de identificação. Esta é uma medida de segurança importante.",
+        hint: "Pense em como evitar erros humanos através de verificações cruzadas e redundantes no processo."
+    },
+    3: {
+        correctAnswer: "c",
+        explanation: "Em caso de discordância, o processo deve ser suspenso imediatamente e toda a identificação deve ser refeita. Esta é a única maneira de garantir que não ocorram trocas de bebês.",
+        hint: "A segurança do paciente é a prioridade máxima. Qualquer dúvida na identificação exige ação imediata e cautelar."
+    }
+};
+
+// Variáveis de estado
+let exploredItems = {};
+let score = 0;
+let answeredQuestions = 0;
+let hintsUsed = {};
+let keyEarned = false;
+let stationTimer = null;
+let startTime = null;
+
+// Iniciar temporizador da estação
+function startStationTimer() {
+    startTime = new Date();
+    stationTimer = setInterval(updateStationTimer, 1000);
+}
+
+// Atualizar temporizador da estação
+function updateStationTimer() {
+    const now = new Date();
+    const elapsedTime = Math.floor((now - startTime) / 1000);
+    
+    const hours = Math.floor(elapsedTime / 3600);
+    const minutes = Math.floor((elapsedTime % 3600) / 60);
+    const seconds = elapsedTime % 60;
+    
+    const timeString = 
+        hours.toString().padStart(2, '0') + ':' +
+        minutes.toString().padStart(2, '0') + ':' +
+        seconds.toString().padStart(2, '0');
+    
+    document.getElementById('total-timer').textContent = timeString;
+}
+
+// Função para examinar itens
+function examineItem(itemType) {
+    const data = stationData[itemType];
+    if (data) {
+        // Atualizar modal
+        document.getElementById('modalTitle').textContent = data.title;
+        document.getElementById('modalContent').innerHTML = data.content;
+        
+        // Mostrar modal
+        const modal = new bootstrap.Modal(document.getElementById('detailModal'));
+        modal.show();
+        
+        // Marcar item como explorado
+        if (!exploredItems[itemType]) {
+            exploredItems[itemType] = true;
+            updateExplorationProgress();
+            addToLog(`🔍 Examinando: ${data.title}`);
+            addScore(2); // 2 pontos por item explorado
+        }
+    }
+}
+
+// Atualizar progresso de exploração
+function updateExplorationProgress() {
+    const exploredCount = Object.keys(exploredItems).length;
+    document.getElementById('exploration-progress').textContent = `Itens explorados: ${exploredCount}/4`;
+    
+    // Se explorou todos os itens, liberar as perguntas
+    if (exploredCount === 4) {
+        document.getElementById('questions-section').style.display = 'block';
+        addToLog('✅ Todos os itens explorados! Perguntas liberadas.');
+    }
+}
+
+// Função para adicionar ao log
+function addToLog(message) {
+    const log = document.getElementById('action-log');
+    if (log.querySelector('.text-muted')) {
+        log.innerHTML = '';
+    }
+    
+    const entry = document.createElement('p');
+    entry.innerHTML = `<small>${new Date().toLocaleTimeString()}:</small> ${message}`;
+    log.prepend(entry);
+}
+
+// Adicionar pontos à pontuação
+function addScore(points) {
+    score += points;
+    document.getElementById('current-score').textContent = score;
+}
+
+// Solicitar dica para uma pergunta específica
+function requestQuestionHint(questionId) {
+    if (hintsUsed[questionId]) {
+        alert('Você já usou uma dica para esta pergunta.');
+        return;
+    }
+    
+    if (confirm('Solicitar dica para esta pergunta? Isso reduzirá 3 pontos da sua pontuação.')) {
+        // Deduzir pontos
+        addScore(-3);
+        hintsUsed[questionId] = true;
+        
+        // Mostrar dica
+        const hintText = questionsData[questionId].hint;
+        document.getElementById('hintContent').innerHTML = `<p>${hintText}</p>`;
+        const modal = new bootstrap.Modal(document.getElementById('hintModal'));
+        modal.show();
+        
+        addToLog(`💡 Dica solicitada para pergunta ${questionId} (-3 pontos)`);
+        
+        // Desabilitar botão de dica para esta pergunta
+        document.querySelector(`#question-${questionId} .btn-outline-primary`).disabled = true;
+    }
+}
+
+// Confirmar resposta para uma pergunta
+function confirmAnswer(questionId) {
+    const selectedOption = document.querySelector(`input[name="q${questionId}"]:checked`);
+    if (!selectedOption) {
+        alert('Por favor, selecione uma resposta antes de confirmar.');
+        return;
+    }
+    
+    const userAnswer = selectedOption.value;
+    const correctAnswer = questionsData[questionId].correctAnswer;
+    const explanation = questionsData[questionId].explanation;
+    
+    // Marcar como respondida
+    answeredQuestions++;
+    document.getElementById(`question-${questionId}`).classList.add('answered');
+    
+    // Verificar se acertou
+    if (userAnswer === correctAnswer) {
+        // Resposta correta
+        document.getElementById(`feedback-${questionId}`).innerHTML = `
+            <div class="correct">
+                <strong>✅ Correto!</strong> ${explanation}
+            </div>
+        `;
+        addScore(2); // 2 pontos por resposta correta
+        addToLog(`✅ Pergunta ${questionId} respondida corretamente (+2 pontos)`);
+    } else {
+        // Resposta incorreta
+        const correctLetter = correctAnswer.toUpperCase();
+        document.getElementById(`feedback-${questionId}`).innerHTML = `
+            <div class="incorrect">
+                <strong>❌ Incorreto.</strong> A resposta correta é a alternativa ${correctLetter}. ${explanation}
+            </div>
+        `;
+        addToLog(`❌ Pergunta ${questionId} respondida incorretamente`);
+    }
+    
+    // Verificar se todas as perguntas foram respondidas
+    if (answeredQuestions === 3) {
+        finishStation();
+    }
+}
+
+// Finalizar a estação
+function finishStation() {
+    // Habilitar botão de finalizar
+    document.getElementById('submit-btn').disabled = false;
+    
+    // Bônus por não usar dicas
+    if (Object.keys(hintsUsed).length === 0) {
+        addScore(1);
+        addToLog('🎉 Bônus de 1 ponto por não usar dicas!');
+    }
+    
+    // Determinar tipo de chave com base na pontuação
+    let keyType = "bronze";
+    let keyMessage = "Chave de Bronze conquistada!";
+    let keyIcon = "🗝️";
+    
+    if (score >= 14) {
+        keyType = "gold";
+        keyMessage = "Chave de Ouro conquistada! Desempenho excelente!";
+        keyIcon = "🔑";
+    } else if (score >= 10) {
+        keyType = "silver"; 
+        keyMessage = "Chave de Prata conquistada! Bom trabalho!";
+        keyIcon = "🔐";
+    }
+    
+    // Mostrar conquista
+    document.getElementById('achievementContent').innerHTML = `
+        <div class="display-1">${keyIcon}</div>
+        <h4>${keyMessage}</h4>
+        <p>Você desbloqueou a chave para a próxima estação!</p>
+        <p>Pontuação final: ${score}/15 pontos</p>
+    `;
+    
+    const modal = new bootstrap.Modal(document.getElementById('achievementModal'));
+    modal.show();
+    
+    keyEarned = true;
+    addToLog(`🏆 ${keyMessage} Pontuação: ${score}/15`);
+    
+    // Atualizar interface de chaves
+    const keyColor = keyType === "gold" ? "warning" : (keyType === "silver" ? "secondary" : "dark");
+    const keyText = keyType === "gold" ? "Ouro" : (keyType === "silver" ? "Prata" : "Bronze");
+    
+    document.getElementById('keys-earned').innerHTML = `
+        <span class="badge bg-${keyColor}">
+            ${keyIcon} ${keyText}
+        </span>
+    `;
+}
+
+// Submeter a estação
+function submitStation() {
+    if (!keyEarned) {
+        alert('Complete todas as perguntas antes de finalizar a estação.');
+        return;
+    }
+    
+    if (confirm('Deseja finalizar a estação e avançar para a próxima?')) {
+        // Parar temporizador
+        clearInterval(stationTimer);
+        
+        // Preparar dados para enviar
+        const timeSpent = document.getElementById('total-timer').textContent;
+        const stationResults = {
+            score: score,
+            keyType: getKeyType(),
+            timeSpent: timeSpent,
+            hintsUsed: Object.keys(hintsUsed).length,
+            totalTime: Math.floor((new Date() - startTime) / 1000)
+        };
+        
+        // Enviar para o servidor
+        fetch('/station/1/complete', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(stationResults)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('✅ Estação concluída com sucesso!');
+                window.location.href = "{{ url_for('dashboard') }}";
+            }
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            alert('Erro ao enviar dados. Tente novamente.');
+        });
+    }
+}
+
+// Determinar tipo de chave com base na pontuação
+function getKeyType() {
+    if (score >= 14) return "gold";
+    if (score >= 10) return "silver";
+    return "bronze";
+}
+
+// Função para sair da estação
+function exitStation() {
+    if (confirm('Deseja sair da estação? Seu progresso será salvo.')) {
+        // Parar temporizador
+        if (stationTimer) clearInterval(stationTimer);
+        
+        window.location.href = "{{ url_for('dashboard') }}";
+    }
+}
+
+// Inicializar tooltips e temporizador
+document.addEventListener('DOMContentLoaded', function() {
+    const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    tooltips.forEach(tooltip => {
+        new bootstrap.Tooltip(tooltip);
+    });
+    
+    // Inicializar pontuação
+    document.getElementById('current-score').textContent = score;
+    
+    // Iniciar temporizador
+    startStationTimer();
+});
+</script>
+{% endblock %}

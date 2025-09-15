@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ challenge.title }} - Escape Room</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <link href="{{ url_for('static', filename='css/challenges.css') }}" rel="stylesheet">
+
+
+    <style>
+        body {
+            background-color: #f0f2f5;
+            overflow: hidden;
+        }
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        .game-header {
+            background: #343a40;
+            color: white;
+            padding: 0.5rem 1rem;
+            flex-shrink: 0;
+        }
+        .game-header .stat-badge {
+            font-size: 1.1rem;
+            padding: 0.5rem 1rem;
+        }
+        .game-main {
+            flex-grow: 1;
+            position: relative;
+            background-size: cover;
+            background-position: center;
+            background-image: url("{{ url_for('static', filename=challenge.background ) }}");
+        }
+        .interactive-item {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 215, 0, 0.7);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+            border: 2px solid white;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+        }
+        .interactive-item:hover {
+            transform: scale(1.2);
+            background: rgba(255, 165, 0, 0.9);
+        }
+        .interactive-item i {
+            font-size: 1.8rem;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <header class="game-header d-flex justify-content-between align-items-center">
+            <div>
+                <a href="{{ url_for('station') }}" class="btn btn-outline-light me-3"><i class="bi bi-x-lg"></i> Sair</a>
+                <span class="fs-5">{{ challenge.title }}</span>
+            </div>
+            <div class="d-flex gap-3">
+                <span class="badge bg-success stat-badge"><i class="bi bi-trophy-fill me-2"></i>Total: <span id="global-score">0</span></span>
+                <span class="badge bg-primary stat-badge"><i class="bi bi-star-fill me-2"></i>Pontos: <span id="total-score">0</span></span>
+                <span class="badge bg-info stat-badge"><i class="bi bi-clock-fill me-2"></i>Tempo: <span id="challenge-timer">00:00</span></span>
+                <span class="badge bg-warning text-dark stat-badge"><i class="bi bi-key-fill me-2"></i>Chaves: <span id="keys-count">0</span></span>
+            </div>
+        </header>
+
+        <main class="game-main" id="game-scenario">
+        </main>
+    </div>
+
+    <!-- MODAL PARA AS PERGUNTAS -->
+    <div class="modal fade" id="questionModal" tabindex="-1" aria-labelledby="questionModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="questionModalLabel">Pergunta do Desafio</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="question-text" class="lead">Aqui vai o texto da pergunta...</p>
+                    <div id="question-options" class="d-grid gap-2 mt-4"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary" id="submit-answer-btn">Responder</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Torna os dados globais para que os scripts dos desafios consigam acessar
+        window.currentChallengeData = {{ challenge | tojson | safe }};
+        window.staticUrl = "{{ url_for('static', filename='') }}";
+
+        // Atualiza chaves e pontuação acumulada logo ao carregar
+        fetch("/api/game/progress")
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById("keys-count").textContent = data.earned_keys.length;
+                    document.getElementById("global-score").textContent = data.total_score;
+                }
+            });
+    </script>
+
+    <!-- Sempre carregar a base antes dos desafios -->
+    <script src="{{ url_for('static', filename='js/challenges/base_challenge.js') }}"></script>
+
+    {% if challenge.type == 'quiz' %}
+    <script src="{{ url_for('static', filename='js/challenges/quiz_challenge.js') }}"></script>
+    {% elif challenge.type == 'ordering' %}
+    <script src="{{ url_for('static', filename='js/challenges/ordering_challenge.js') }}"></script>
+    {% elif challenge.type == 'memory' %}
+    <script src="{{ url_for('static', filename='js/challenges/memory_challenge.js') }}"></script>
+    {% elif challenge.type == 'matching' %}
+    <script src="{{ url_for('static', filename='js/challenges/matching_challenge.js') }}"></script>
+    {% elif challenge.type == 'puzzle' %}
+    <script src="{{ url_for('static', filename='js/challenges/puzzle_challenge.js') }}"></script>
+    {% elif challenge.type == 'wordsearch' %}
+    <script src="{{ url_for('static', filename='js/challenges/wordsearch_challenge.js') }}"></script>
+    {% else %}
+    <script>console.error("Tipo de desafio desconhecido: " + window.currentChallengeData.type);</script>
+    {% endif %}
+</body>
+</html>

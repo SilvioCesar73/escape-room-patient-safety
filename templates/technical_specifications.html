@@ -1,0 +1,45 @@
+
+{% extends "base.html" %}
+{% block title %}{{ text.technical_specifications }}{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-10">
+    <h1 class="text-center mb-4">{{ text.technical_specifications }}</h1>
+    
+    <div class="card shadow">
+      <div class="card-body">
+
+        <h3>Ficha Técnica</h3>
+        <ul>
+          <li><strong>Concepção e desenvolvimento:</strong> Prof. Dr. Silvio Cesar da Conceição</li>
+          <li><strong>Contato:</strong> silvioenfermeiro73@gmail.com / Lattes: http://lattes.cnpq.br/6343863490849672</li>
+          <li><strong>Revisão técnica:</strong> (---)</li>
+          <li><strong>Apoio institucional:</strong> Rede Brasileira de Enfermagem e Segurança do Paciente (REBRAENSP) – Núcleo Rio de Janeiro</li>
+        </ul>
+
+        <h3>Aspectos técnicos</h3>
+        <ul>
+          <li><strong>Linguagens utilizadas:</strong> Python, JavaScript, HTML5, CSS3</li>
+          <li><strong>Framework principal:</strong> Flask (backend) + Bootstrap (frontend responsivo)</li>
+          <li><strong>Banco de dados:</strong> SQLite</li>
+          <li><strong>Bibliotecas e ferramentas:</strong> 
+            <ul>
+              <li>Bootstrap Icons</li>
+              <li>Chart.js (gráficos e dashboards)</li>
+              <li>LocalStorage (progresso do usuário)</li>
+            </ul>
+          </li>
+          <li><strong>Hospedagem:</strong> (a definir, ex.: Heroku, Render, ou servidor institucional)</li>
+        </ul>
+
+        <div class="text-center mt-4">
+          <a href="{{ url_for('home_pt') if 'lang' not in session else url_for('home_' + session['lang']) }}"
+             class="btn btn-primary">
+            ← Voltar à Página Inicial
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

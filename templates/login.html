@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}{{ text.login_title }}{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white text-center">
+                <h3 class="mb-0">{{ text.login_title }}</h3>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">{{ text.email }}</label>
+                        <input type="email" class="form-control" id="email" name="email" 
+                               placeholder="seu.email@exemplo.com" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="password" class="form-label">{{ text.password }}</label>
+                        <input type="password" class="form-control" id="password" name="password" 
+                               placeholder="••••••••" required>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">{{ text.login }}</button>
+                    </div>
+                </form>
+                
+                <div class="text-center mt-3">
+                    <a href="{{ url_for('home_pt') if 'lang' not in session else url_for('home_' + session['lang']) }}" 
+                       class="text-decoration-none">
+                        <i class="bi bi-arrow-left"></i> {{ text.back_home }}
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center mt-3">
+            <p>Não tem uma conta? <a href="{{ url_for('register') }}">{{ text.signup }}</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<!-- /templates/station.html -->
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escape Room - Segurança do Paciente Pediátrico</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Estilos customizados -->
+    <style>
+        :root {
+            --primary-color: #4e73df;
+            --secondary-color: #6f42c1;
+            --success-color: #1cc88a;
+            --warning-color: #f6c23e;
+            --danger-color: #e74a3b;
+            --dark-color: #5a5c69;
+        }
+        
+        body {
+            background-color: #f8f9fc;
+        }
+
+        .station-header {
+            background: linear-gradient(135deg, var(--primary-color  ), var(--secondary-color));
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+        
+        .station-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .station-card .card-body {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .station-card .btn {
+            margin-top: auto; /* Empurra o botão para o final do card */
+        }
+        
+        .station-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        .difficulty-badge {
+            font-size: 0.9rem;
+            padding: 0.3rem 0.6rem;
+            border-radius: 20px;
+        }
+        
+        .status-badge {
+            font-size: 0.8rem;
+            padding: 0.3rem 0.6rem;
+            border-radius: 20px;
+        }
+        
+        .station-stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 1rem 0;
+        }
+        
+        .stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.85rem;
+        }
+        
+        .stat i {
+            font-size: 1.2rem;
+            margin-bottom: 0.3rem;
+        }
+        
+        .station-progress {
+            margin: 1rem 0;
+        }
+        
+        .station-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            padding: 1rem;
+        }
+        
+        /* Cores por categoria */
+        .theme-maternidade { border-left: 4px solid #ff9cce; }
+        .theme-uti { border-left: 4px solid #8ce99a; }
+        .theme-medicacao { border-left: 4px solid #ffa94d; }
+        .theme-procedimentos { border-left: 4px solid #74c0fc; }
+        .theme-comunicacao { border-left: 4px solid #ffd43b; }
+        
+        /* Animações */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        .global-timer {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+        }
+        
+        .global-timer i {
+            margin-right: 0.5rem;
+            color: #e74a3b;
+        }
+        
+        /* Estilo para timer quando está acabando */
+        .timer-warning {
+            background: rgba(255, 193, 7, 0.9) !important;
+            animation: pulse 1s infinite;
+        }
+        
+        .timer-danger {
+            background: rgba(220, 53, 69, 0.9) !important;
+            color: white !important;
+            animation: pulse 0.5s infinite;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header da Estação -->
+    <header class="station-header text-center">
+        <div class="container">
+            <h1 class="display-4 fw-bold">Escape Room - Segurança do Paciente</h1>
+            <p class="lead">Complete as 15 estações para dominar a segurança neonatal e pediátrica</p>
+            
+            <div class="mt-3">
+                <a href="{{ url_for('dashboard') }}" class="btn btn-light btn-lg">
+                    <i class="bi bi-speedometer2 me-2"></i>Voltar ao Dashboard
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Timer Global -->
+    <div class="global-timer" id="global-timer">
+        <i class="bi bi-clock"></i>
+        <span id="main-timer">20:00</span>
+    </div>
+
+    <!-- Container Principal -->
+    <div class="container-fluid">
+        <!-- Grid de Estações -->
+        <div class="station-grid" id="stations-container">
+            
+            <!-- Estação 1 -->
+            <div class="station-card theme-maternidade">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <span class="badge bg-primary station-number">#1</span>
+                        <span class="difficulty-badge bg-success">⭐ Fácil</span>
+                        <span class="status-badge bg-secondary">🔒 Bloqueado</span>
+                    </div>
+                    <h5 class="card-title mt-3">Identificação Segura do Recém-nascido</h5>
+                    <p class="text-muted">Maternidade - Berçario</p>
+                    <div class="station-stats">
+                        <div class="stat"><i class="bi bi-clock text-info"></i><span>1.5 min</span></div>
+                        <div class="stat"><i class="bi bi-star text-warning"></i><span>5 pts</span></div>
+                        <div class="stat"><i class="bi bi-award text-success"></i><span id="earned-points-1">--</span></div>
+                        <div class="stat"><i class="bi bi-stopwatch text-danger"></i><span id="earned-time-1">--</span></div>
+                        <div class="stat"><i class="bi bi-key text-secondary"></i><span>-</span></div>
+                    </div>
+                    <button class="btn btn-secondary w-100 mt-2 start-challenge-btn" data-challenge-id="1" disabled>
+                        Carregando...
+                    </button>
+                </div>
+            </div>
+
+            <!-- Estação 2 -->
+            <div class="station-card theme-medicacao">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <span class="badge bg-primary station-number">#2</span>
+                        <span class="difficulty-badge bg-warning">⭐⭐ Moderado</span>
+                        <span class="status-badge bg-secondary">🔒 Bloqueado</span>
+                    </div>
+                    <h5 class="card-title mt-3">Administração de Medicamentos na Pediatria</h5>
+                    <p class="text-muted">Pediatria - Enfermaria</p>
+                    <div class="station-stats">
+                        <div class="stat"><i class="bi bi-clock text-info"></i><span>1,5 min</span></div>
+                        <div class="stat"><i class="bi bi-star text-warning"></i><span>7 pts</span></div>
+                        <div class="stat"><i class="bi bi-award text-success"></i><span id="earned-points-2">--</span></div>
+                        <div class="stat"><i class="bi bi-stopwatch text-danger"></i><span id="earned-time-2">--</span></div>
+                        <div class="stat"><i class="bi bi-key text-secondary"></i><span>Chave 1</span></div>
+                    </div>
+                    <button class="btn btn-secondary w-100 mt-2 start-challenge-btn" data-challenge-id="2" disabled>
+                        🔒 Complete a Estação 1
+                    </button>
+                </div>
+            </div>
+
+            <!-- Estação 3 -->
+            <div class="station-card theme-uti">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <span class="badge bg-primary station-number">#3</span>
+                        <span class="difficulty-badge bg-success">⭐ Fácil</span>
+                        <span class="status-badge bg-secondary">🔒 Bloqueado</span>
+                    </div>
+                    <h5 class="card-title mt-3">Higienização das Mãos e Prevenção de Infecções</h5>
+                    <p class="text-muted">UTI Neonatal</p>
+                    <div class="station-stats">
+                        <div class="stat"><i class="bi bi-clock text-info"></i><span>1,5 min</span></div>
+                        <div class="stat"><i class="bi bi-star text-warning"></i><span>4 pts</span></div>
+                        <div class="stat"><i class="bi bi-award text-success"></i><span id="earned-points-3">--</span></div>
+                        <div class="stat"><i class="bi bi-stopwatch text-danger"></i><span id="earned-time-3">--</span></div>
+                        <div class="stat"><i class="bi bi-key text-secondary"></i><span>Chave 2</span></div>
+                    </div>
+                    <button class="btn btn-secondary w-100 mt-2 start-challenge-btn" data-challenge-id="3" disabled>
+                        🔒 Complete a Estação 2
+                    </button>
+                </div>
+            </div>
+
+            <!-- Estação 4 -->
+            <div class="station-card theme-uti">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <span class="badge bg-primary station-number">#4</span>
+                        <span class="difficulty-badge bg-danger">⭐⭐⭐ Difícil</span>
+                        <span class="status-badge bg-secondary">🔒 Bloqueado</span>
+                    </div>
+                    <h5 class="card-title mt-3">Segurança no Manejo da Nutrição Enteral</h5>
+                    <p class="text-muted">Nutrição - Farmácia</p>
+                    <div class="station-stats">
+                        <div class="stat"><i class="bi bi-clock text-info"></i><span>1,5 min</span></div>
+                        <div class="stat"><i class="bi bi-star text-warning"></i><span>6 pts</span></div>
+                        <div class="stat"><i class="bi bi-award text-success"></i><span id="earned-points-4">--</span></div>
+                        <div class="stat"><i class="bi bi-stopwatch text-danger"></i><span id="earned-time-4">--</span></div>
+                        <div class="stat"><i class="bi bi-key text-secondary"></i><span>Chave 3</span></div>
+                    </div>
+                    <button class="btn btn-secondary w-100 mt-2 start-challenge-btn" data-challenge-id="4" disabled>
+                        🔒 Complete a Estação 3
+                    </button>
+                </div>
+            </div>
+
+            <!-- Estação 5 -->
+            <div class="station-card theme-uti">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <span class="badge bg-primary station-number">#5</span>
+                        <span class="difficulty-badge bg-warning">⭐⭐ Moderado</span>
+                        <span class="status-badge bg-secondary">🔒 Bloqueado</span>
+                    </div>
+                    <h5 class="card-title mt-3">Monitorização Clínica em UTI Pediátrica</h5>
+                    <p class="text-muted">UTI Pediátrica</p>
+                    <div class="station-stats">
+                        <div class="stat"><i class="bi bi-clock text-info"></i><span>1.5 min</span></div>
+                        <div class="stat"><i class="bi bi-star text-warning"></i><span>8 pts</span></div>
+                        <div class="stat"><i class="bi bi-award text-success"></i><span id="earned-points-5">--</span></div>
+                        <div class="stat"><i class="bi bi-stopwatch text-danger"></i><span id="earned-time-5">--</span></div>
+                        <div class="stat"><i class="bi bi-key text-secondary"></i><span>Chave 4</span></div>
+                    </div>
+                    <button class="btn btn-secondary w-100 mt-2 start-challenge-btn" data-challenge-id="5" disabled>
+                        🔒 Complete a Estação 4
+                    </button>
+                </div>
+            </div>
+
+            <!-- Estação 6 -->
+            <div class="station-card theme-uti">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <span class="badge bg-primary station-number">#6</span>
+                        <span class="difficulty-badge bg-success">⭐ Fácil</span>
+                        <span class="status-badge bg-secondary">🔒 Bloqueado</span>
+                    </div>
+                    <h5 class="card-title mt-3">Prevenção de Quedas em Pediatria</h5>
+                    <p class="text-muted">Enfermaria Pediátrica</p>
+                    <div class="station-stats">
+                        <div class="stat"><i class="bi bi-clock text-info"></i><span>1.5 min</span></div>
+                        <div class="stat"><i class="bi bi-star text-warning"></i><span>5 pts</span></div>
+                        <div class="stat"><i class="bi bi-award text-success"></i><span id="earned-points-6">--</span></div>
+                        <div class="stat"><i class="bi bi-stopwatch text-danger"></i><span id="earned-time-6">--</span></div>
+                        <div class="stat"><i class="bi bi-key text-secondary"></i><span>Chave 5</span></div>
+                    </div>
+                    <button class="btn btn-secondary w-100 mt-2 start-challenge-btn" data-challenge-id="6" disabled>
+                        🔒 Complete a Estação 5
+                    </button>
+                </div>
+            </div>
+
+            <!-- Estação 7 -->
+            <div class="station-card theme-procedimentos">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <span class="badge bg-primary station-number">#7</span>
+                        <span class="difficulty-badge bg-danger">⭐⭐⭐ Difícil</span>
+                        <span class="status-badge bg-secondary">🔒 Bloqueado</span>
+                    </div>
+                    <h5 class="card-title mt-3">Cuidados com Dispositivos Invasivos</h5>
+                    <p class="text-muted">UTI Neonatal</p>
+                    <div class="station-stats">
+                        <div class="stat"><i class="bi bi-clock text-info"></i><span>2 min</span></div>
+                        <div class="stat"><i class="bi bi-star text-warning"></i><span>8 pts</span></div>
+                        <div class="stat"><i class="bi bi-award text-success"></i><span id="earned-points-7">--</span></div>
+                        <div class="stat"><i class="bi bi-stopwatch text-danger"></i><span id="earned-time-7">--</span></div>
+                        <div class="stat"><i class="bi bi-key text-secondary"></i><span>Chave 6</span></div>
+                    </div>
+                    <button class="btn btn-secondary w-100 mt-2 start-challenge-btn" data-challenge-id="7" disabled>
+                        🔒 Complete a Estação 6
+                    </button>
+                </div>
+            </div>
+
+            <!-- Estação 8 -->
+            <div class="station-card theme-comunicacao">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <span class="badge bg-primary station-number">#8</span>
+                        <span class="difficulty-badge bg-warning">⭐⭐ Moderado</span>
+                        <span class="status-badge bg-secondary">🔒 Bloqueado</span>
+                    </div>
+                    <h5 class="card-title mt-3">Comunicação Efetiva na Transição do Cuidado</h5>
+                    <p class="text-muted">Relações - Enfermagem</p>
+                    <div class="station-stats">
+                        <div class="stat"><i class="bi bi-clock text-info"></i><span>1 min</span></div>
+                        <div class="stat"><i class="bi bi-star text-warning"></i><span>5 pts</span></div>
+                        <div class="stat"><i class="bi bi-award text-success"></i><span id="earned-points-8">--</span></div>
+                        <div class="stat"><i class="bi bi-stopwatch text-danger"></i><span id="earned-time-8">--</span></div>
+                        <div class="stat"><i class="bi bi-key text-secondary"></i><span>Chave 7</span></div>
+                    </div>
+                    <button class="btn btn-secondary w-100 mt-2 start-challenge-btn" data-challenge-id="8" disabled>
+                        🔒 Complete a Estação 7
+                    </button>
+                </div>
+            </div>
+
+            <!-- Estação 9 -->
+            <div class="station-card theme-procedimentos">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <span class="badge bg-primary station-number">#9</span>
+                        <span class="difficulty-badge bg-warning">⭐⭐ Moderado</span>
+                        <span class="status-badge bg-secondary">🔒 Bloqueado</span>
+                    </div>
+                    <h5 class="card-title mt-3">Reconhecimento Precose de Sinais de Sepse</h5>
+                    <p class="text-muted">UTI</p>
+                    <div class="station-stats">
+                        <div class="stat"><i class="bi bi-clock text-info"></i><span>2 min</span></div>
+                        <div class="stat"><i class="bi bi-star text-warning"></i><span>6 pts</span></div>
+                        <div class="stat"><i class="bi bi-award text-success"></i><span id="earned-points-9">--</span></div>
+                        <div class="stat"><i class="bi bi-stopwatch text-danger"></i><span id="earned-time-9">--</span></div>
+                        <div class="stat"><i class="bi bi-key text-secondary"></i><span>Chave 8</span></div>
+                    </div>
+                    <button class="btn btn-secondary w-100 mt-2 start-challenge-btn" data-challenge-id="9" disabled>
+                        🔒 Complete a Estação 8
+                    </button>
+                </div>
+            </div>
+
+            <!-- Estação 10 -->
+            <div class="station-card theme-uti">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <span class="badge bg-primary station-number">#10</span>
+                        <span class="difficulty-badge bg-danger">⭐⭐⭐ Difícil</span>
+                        <span class="status-badge bg-secondary">🔒 Bloqueado</span>
+                    </div>
+                    <h5 class="card-title mt-3">Segurança na Ventilação Mecânica</h5>
+                    <p class="text-muted">UTI</p>
+                    <div class="station-stats">
+                        <div class="stat"><i class="bi bi-clock text-info"></i><span>2 min</span></div>
+                        <div class="stat"><i class="bi bi-star text-warning"></i><span>9 pts</span></div>
+                        <div class="stat"><i class="bi bi-award text-success"></i><span id="earned-points-10">--</span></div>
+                        <div class="stat"><i class="bi bi-stopwatch text-danger"></i><span id="earned-time-10">--</span></div>
+                        <div class="stat"><i class="bi bi-key text-secondary"></i><span>Chave 9</span></div>
+                    </div>
+                    <button class="btn btn-secondary w-100 mt-2 start-challenge-btn" data-challenge-id="10" disabled>
+                        🔒 Complete a Estação 9
+                    </button>
+                </div>
+            </div>
+
+            <!-- Estação 11 -->
+            <div class="station-card theme-comunicacao">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <span class="badge bg-primary station-number">#11</span>
+                        <span class="difficulty-badge bg-success">⭐ Fácil</span>
+                        <span class="status-badge bg-secondary">🔒 Bloqueado</span>
+                    </div>
+                    <h5 class="card-title mt-3">Segurança na Transfusão de Hemoderivados</h5>
+                    <p class="text-muted">Pediatria/Neonatologia</p>
+                    <div class="station-stats">
+                        <div class="stat"><i class="bi bi-clock text-info"></i><span>1 min</span></div>
+                        <div class="stat"><i class="bi bi-star text-warning"></i><span>8 pts</span></div>
+                        <div class="stat"><i class="bi bi-award text-success"></i><span id="earned-points-11">--</span></div>
+                        <div class="stat"><i class="bi bi-stopwatch text-danger"></i><span id="earned-time-11">--</span></div>
+                        <div class="stat"><i class="bi bi-key text-secondary"></i><span>Chave 10</span></div>
+                    </div>
+                    <button class="btn btn-secondary w-100 mt-2 start-challenge-btn" data-challenge-id="11" disabled>
+                        🔒 Complete a Estação 10
+                    </button>
+                </div>
+            </div>
+
+            <!-- Estação 12 -->
+            <div class="station-card theme-medicacao">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <span class="badge bg-primary station-number">#12</span>
+                        <span class="difficulty-badge bg-danger">⭐⭐⭐ Difícil</span>
+                        <span class="status-badge bg-secondary">🔒 Bloqueado</span>
+                    </div>
+                    <h5 class="card-title mt-3">Prevenção de Lesão por Pressão em Recém-nascidos e Crianças</h5>
+                    <p class="text-muted">Enfermaria</p>
+                    <div class="station-stats">
+                        <div class="stat"><i class="bi bi-clock text-info"></i><span>2 min</span></div>
+                        <div class="stat"><i class="bi bi-star text-warning"></i><span>6 pts</span></div>
+                        <div class="stat"><i class="bi bi-award text-success"></i><span id="earned-points-12">--</span></div>
+                        <div class="stat"><i class="bi bi-stopwatch text-danger"></i><span id="earned-time-12">--</span></div>
+                        <div class="stat"><i class="bi bi-key text-secondary"></i><span>Chave 11</span></div>
+                    </div>
+                    <button class="btn btn-secondary w-100 mt-2 start-challenge-btn" data-challenge-id="12" disabled>
+                        🔒 Complete a Estação 11
+                    </button>
+                </div>
+            </div>
+
+            <!-- Estação 13 -->
+            <div class="station-card theme-uti">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <span class="badge bg-primary station-number">#13</span>
+                        <span class="difficulty-badge bg-warning">⭐⭐ Moderado</span>
+                        <span class="status-badge bg-secondary">🔒 Bloqueado</span>
+                    </div>
+                    <h5 class="card-title mt-3">Manejo da Dor em Neonatos no Berçário</h5>
+                    <p class="text-muted">Enfermaria</p>
+                    <div class="station-stats">
+                        <div class="stat"><i class="bi bi-clock text-info"></i><span>1.5 min</span></div>
+                        <div class="stat"><i class="bi bi-star text-warning"></i><span>7 pts</span></div>
+                        <div class="stat"><i class="bi bi-award text-success"></i><span id="earned-points-13">--</span></div>
+                        <div class="stat"><i class="bi bi-stopwatch text-danger"></i><span id="earned-time-13">--</span></div>
+                        <div class="stat"><i class="bi bi-key text-secondary"></i><span>Chave 12</span></div>
+                    </div>
+                    <button class="btn btn-secondary w-100 mt-2 start-challenge-btn" data-challenge-id="13" disabled>
+                        🔒 Complete a Estação 12
+                    </button>
+                </div>
+            </div>
+
+            <!-- Estação 14 -->
+            <div class="station-card theme-comunicacao">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <span class="badge bg-primary station-number">#14</span>
+                        <span class="difficulty-badge bg-warning">⭐⭐ Moderado</span>
+                        <span class="status-badge bg-secondary">🔒 Bloqueado</span>
+                    </div>
+                    <h5 class="card-title mt-3">Passagem de Plantão Segura entre a Equipe</h5>
+                    <p class="text-muted">Multidisciplinar</p>
+                    <div class="station-stats">
+                        <div class="stat"><i class="bi bi-clock text-info"></i><span>2 min</span></div>
+                        <div class="stat"><i class="bi bi-star text-warning"></i><span>5 pts</span></div>
+                        <div class="stat"><i class="bi bi-award text-success"></i><span id="earned-points-14">--</span></div>
+                        <div class="stat"><i class="bi bi-stopwatch text-danger"></i><span id="earned-time-14">--</span></div>
+                        <div class="stat"><i class="bi bi-key text-secondary"></i><span>Chave 13</span></div>
+                    </div>
+                    <button class="btn btn-secondary w-100 mt-2 start-challenge-btn" data-challenge-id="14" disabled>
+                        🔒 Complete a Estação 13
+                    </button>
+                </div>
+            </div>
+
+            <!-- Estação 15 -->
+            <div class="station-card theme-procedimentos">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <span class="badge bg-primary station-number">#15</span>
+                        <span class="difficulty-badge bg-danger">⭐⭐⭐ Difícil</span>
+                        <span class="status-badge bg-secondary">🔒 Bloqueado</span>
+                    </div>
+                    <h5 class="card-title mt-3">Segurança Cirúrgica em Pediatrie e Neonatologia</h5>
+                    <p class="text-muted">Centro-cirúrgico</p>
+                    <div class="station-stats">
+                        <div class="stat"><i class="bi bi-clock text-info"></i><span>2.5 min</span></div>
+                        <div class="stat"><i class="bi bi-star text-warning"></i><span>11 pts</span></div>
+                        <div class="stat"><i class="bi bi-award text-success"></i><span id="earned-points-15">--</span></div>
+                        <div class="stat"><i class="bi bi-stopwatch text-danger"></i><span id="earned-time-15">--</span></div>
+                        <div class="stat"><i class="bi bi-key text-secondary"></i><span>Chave 14</span></div>
+                    </div>
+                    <button class="btn btn-secondary w-100 mt-2 start-challenge-btn" data-challenge-id="15" disabled>
+                        🔒 Complete a Estação 14
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Gerenciador de Timer Global Persistente
+        class GlobalTimerManager {
+            constructor( ) {
+                this.timerElement = document.getElementById('main-timer');
+                this.globalTimerElement = document.getElementById('global-timer');
+                this.startTimeKey = 'escaperoom_start_time';
+                this.totalDuration = 2000 * 60; // 20 minutos em segundos
+                this.timerInterval = null;
+                
+                this.init();
+            }
+            
+            init() {
+                const startTime = localStorage.getItem(this.startTimeKey);
+                
+                if (startTime) {
+                    this.resumeTimer(parseInt(startTime));
+                } else {
+                    this.startNewTimer();
+                }
+            }
+            
+            startNewTimer() {
+                const startTime = Date.now();
+                localStorage.setItem(this.startTimeKey, startTime.toString());
+                this.resumeTimer(startTime);
+            }
+            
+            resumeTimer(startTime) {
+                if (!this.timerElement) return;
+                
+                const updateTimer = () => {
+                    const currentTime = Date.now();
+                    const elapsedSeconds = Math.floor((currentTime - startTime) / 1000);
+                    const timeLeft = Math.max(0, this.totalDuration - elapsedSeconds);
+                    
+                    if (timeLeft <= 0) {
+                        this.onTimerEnd();
+                        return;
+                    }
+                    
+                    this.updateDisplay(timeLeft);
+                    this.updateTimerStyle(timeLeft);
+                };
+                
+                updateTimer();
+                this.timerInterval = setInterval(updateTimer, 1000);
+            }
+            
+            updateDisplay(timeLeft) {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                this.timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+            
+            updateTimerStyle(timeLeft) {
+                this.globalTimerElement.classList.remove('timer-warning', 'timer-danger');
+                
+                if (timeLeft <= 60) { // Último minuto
+                    this.globalTimerElement.classList.add('timer-danger');
+                } else if (timeLeft <= 300) { // Últimos 5 minutos
+                    this.globalTimerElement.classList.add('timer-warning');
+                }
+            }
+            
+            onTimerEnd() {
+                clearInterval(this.timerInterval);
+                this.timerElement.textContent = "00:00";
+                this.globalTimerElement.classList.add('timer-danger');
+                alert('Tempo esgotado! O Escape Room foi finalizado.');
+                // Opcional: redirecionar para uma página de resultados
+                // window.location.href = '/results';
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => new GlobalTimerManager());
+    </script>
+
+    <!-- 🔑 LÓGICA DE DESBLOQUEIO DAS ESTAÇÕES (CORRIGIDO) 🔑 -->
+    <!-- Carrega o gerenciador da API primeiro, pois o script seguinte depende dele -->
+    <script src="{{ url_for('static', filename='js/config/progress_manager.js') }}"></script>
+    <!-- Carrega a lógica que usa o gerenciador para atualizar a UI e lidar com cliques -->
+    <script src="{{ url_for('static', filename='js/config/challenges.js') }}"></script>
+
+
+
+<!-- Modal de Storytelling (genérico) -->
+<div class="modal fade" id="storytellingModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="storytellingModalTitle">Narrativa da Estação</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
+      <div class="modal-body">
+        <p id="storytellingModalBody" class="mb-0">Carregando...</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" id="storytellingContinueBtn" data-bs-dismiss="modal">
+          Continuar para o desafio →
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+    <script src="{{ url_for('static', filename='js/config/storytelling_handler.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='js/config/station_results.js') }}"></script>
+
+
+
+</body>
+</html>

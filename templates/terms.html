@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}{{ text.terms }}{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <h1 class="text-center mb-4">{{ text.terms }}</h1>
+        
+        <div class="card shadow">
+            <div class="card-body">
+                <h3>1. Termos de Uso</h3>
+                <p>Ao acessar o site Escape Room da Segurança do Paciente, você concorda em cumprir estes termos de serviço, todas as leis e regulamentos aplicáveis, e reconhece ser responsável pelo cumprimento das leis locais relacionadas.</p>
+                
+                <h3>2. Uso de Licença</h3>
+                <p>É concedida permissão para baixar temporariamente uma cópia dos materiais (informações ou software) no site Escape Room da Segurança do Paciente, apenas para visualização transitória pessoal e não comercial.</p>
+                
+                <h3>3. Isenção de responsabilidade</h3>
+                <p>Os materiais no site da Escape Room da Segurança do Paciente são fornecidos "como estão". A Escape Room da Segurança do Paciente não oferece garantias, expressas ou implícitas, incluindo, sem limitação, garantias implícitas de comercialização, adequação a um fim específico ou não violação de propriedade intelectual.</p>
+                
+                <h3>4. Privacidade e Proteção de Dados (LGPD)</h3>
+                <p>O Escape Room da Segurança do Paciente respeita a sua privacidade e cumpre a Lei Geral de Proteção de Dados Pessoais (Lei nº 13.709/2018 - LGPD). Nenhuma informação pessoal identificável dos usuários será coletada, armazenada ou compartilhada sem consentimento explícito.</p>
+                <p>Somente dados <strong>globais e agregados de utilização</strong> poderão ser coletados e analisados, com a finalidade exclusiva de aprimorar a plataforma, melhorar a experiência de aprendizado e desenvolver novas funcionalidades. Estes dados não permitirão, em hipótese alguma, a identificação individual de usuários.</p>
+                <p>Ao utilizar a plataforma, você concorda com este tratamento de dados em caráter estatístico e não individualizado. Caso tenha dúvidas ou queira mais informações sobre a proteção de dados, entre em contato pelos canais de suporte indicados na plataforma.</p>
+                
+                <div class="text-center mt-4">
+                    <a href="{{ url_for('home_pt') if 'lang' not in session else url_for('home_' + session['lang']) }}" 
+                       class="btn btn-primary">
+                        Voltar à Página Inicial
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

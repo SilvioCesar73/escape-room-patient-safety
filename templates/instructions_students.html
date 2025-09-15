@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}{{ text.instructions_students }}{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-10">
+    <h1 class="text-center mb-4">{{ text.instructions_students }}</h1>
+    
+    <div class="card shadow">
+      <div class="card-body">
+
+        <h3>O que é o Escape Room da Segurança do Paciente?</h3>
+        <p>
+          O <strong>Escape Room da Segurança do Paciente</strong> é uma experiência interativa criada especialmente para a 
+          <strong>Simulation Week 2025</strong> e inspirada no tema do <strong>Dia Mundial da Segurança do Paciente</strong>, 
+          celebrado em <strong>17 de setembro</strong> e promovido pela <strong>OMS</strong>. 
+        </p>
+        <p>
+          Em 2025, o tema global é <em>“Cuidado seguro para cada recém-nascido e cada criança”</em>, com o slogan
+          <strong>“Segurança do paciente desde o início!”</strong>. Nossa proposta combina esse tema com a dinâmica de 
+          simulação da SSH, levando você a enfrentar <strong>15 desafios</strong> que representam situações reais de segurança 
+          do paciente nos setores de neonatologia e pediatria.
+        </p>
+
+        <h3>Como funciona?</h3>
+        <ul>
+          <li>O jogo é dividido em <strong>15 estações</strong>.</li>
+          <li>Cada estação traz um <strong>desafio prático</strong> relacionado à segurança do paciente.</li>
+          <li>Ao resolver corretamente, sua equipe recebe uma <strong>chave</strong> que libera a próxima estação.</li>
+          <li>Vocês terão <strong>tempo limitado</strong> em cada estação.</li>
+          <li>Respostas corretas dão <strong>pontos</strong>; erros e atrasos geram <strong>penalizações</strong>.</li>
+        </ul>
+
+        <h3>Organização da equipe</h3>
+        <ul>
+          <li>Formem equipes de <strong>3 a 5 estudantes</strong>.</li>
+          <li>Escolham um <strong>líder</strong> que será responsável por se cadastrar na plataforma e registrar o progresso.</li>
+          <li>O líder também será responsável por gerar o <strong>relatório final</strong> e enviar ao professor.</li>
+          <li>Todos devem participar das discussões e colaborar nas decisões.</li>
+        </ul>
+
+        <h3>Execução</h3>
+        <p>
+          Durante a atividade, usem computadores ou tablets. Trabalhem em conjunto para resolver os desafios, 
+          discutindo ideias e escolhendo as melhores respostas. Lembrem-se: a cooperação é essencial para o sucesso!
+        </p>
+
+        <h3>Debriefing</h3>
+        <p>
+          Depois que todas as equipes terminarem, haverá um <strong>momento de reflexão coletiva</strong> conduzido pelo professor,
+          com duração de <strong>20 a 40 minutos</strong>. Será a oportunidade de revisar os acertos e erros, compartilhar 
+          estratégias e conectar a experiência às práticas reais de segurança do paciente.
+        </p>
+
+        <p class="mt-4">
+          Aproveitem esta jornada! O Escape Room foi feito para que vocês aprendam de forma divertida, 
+          desafiem seus conhecimentos e fortaleçam o trabalho em equipe. 🚀
+        </p>
+
+        <div class="text-center mt-4">
+          <a href="{{ url_for('home_pt') if 'lang' not in session else url_for('home_' + session['lang']) }}"
+             class="btn btn-primary">
+            ← Voltar à Página Inicial
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

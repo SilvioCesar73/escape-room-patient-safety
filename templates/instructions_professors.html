@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}{{ text.instructions_professors }}{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-10">
+    <h1 class="text-center mb-4">{{ text.instructions_professors }}</h1>
+    
+    <div class="card shadow">
+      <div class="card-body">
+
+        <h3>Dia Mundial da Segurança do Paciente 2025</h3>
+        <p>
+            O <strong>Dia Mundial da Segurança do Paciente (DMSP)</strong> é celebrado em
+            <strong>17 de setembro</strong> e é promovido pela <strong>Organização Mundial da Saúde (OMS)</strong>. 
+            Essa data é uma oportunidade global para conscientizar o público, promover a colaboração entre diferentes atores e mobilizar ações que fortaleçam a segurança do paciente em todos os contextos de cuidado.
+        </p>
+        <p>
+            Em 2025, o tema definido pela OMS é <em>“Cuidado seguro para cada recém-nascido e cada criança”</em>,
+            com o slogan <strong>“Segurança do paciente desde o início!”</strong>, reconhecendo a vulnerabilidade dessa população frente a riscos e danos causados por cuidados inseguros.
+        </p>
+
+        <h3>Simulation Week 2025</h3>
+        <p>
+            A <strong>Simulation Week</strong>, promovida pela <strong>Society for Simulation in Healthcare (SSH)</strong>,
+            acontecerá de <strong>15 a 19 de setembro de 2025</strong>. Esse evento internacional busca valorizar, difundir e conectar iniciativas de ensino-aprendizagem baseadas em simulação em saúde ao redor do mundo.
+        </p>
+
+        <h3>Integração das duas estratégias</h3>
+        <p>
+            O <em>Escape Room da Segurança do Paciente: Garantindo segurança para recém-nascidos e crianças através da simulação</em>
+            é uma iniciativa dos idealizadores da plataforma, que uniram o tema do DMSP 2025 com a dinâmica da Simulation Week 2025.
+        </p>
+        <p>
+            Embora sejam <strong>eventos distintos e promovidos por instituições diferentes</strong>, essa combinação foi pensada como uma forma de potencializar a aprendizagem, trazendo o tema global da OMS para dentro de uma experiência lúdica e inovadora apoiada na proposta de simulação da SSH.
+        </p>
+
+        <h3>O que é um Escape Room?</h3>
+        <p>
+          O <em>Escape Room</em> é uma estratégia de aprendizagem ativa baseada em jogos. Os participantes são
+          desafiados a resolver enigmas, tarefas e perguntas dentro de um cenário simulado, geralmente com
+          tempo limitado. No ensino em saúde, esse método favorece o raciocínio clínico, a tomada de decisão,
+          o engajamento e a colaboração em equipe.
+        </p>
+
+        <h3>Como aplicar na prática docente</h3>
+
+        <h4>1. Estrutura da Plataforma</h4>
+        <ul>
+          <li>O jogo é composto por <strong>15 estações temáticas</strong>, da neonatologia à pediatria.</li>
+          <li>Cada estação exige a resolução de um desafio para liberar a <strong>chave do setor</strong>.</li>
+          <li>O tempo de resposta é controlado: atrasos e erros reduzem a pontuação final.</li>
+          <li>As equipes acumulam pontos com base em acertos e velocidade.</li>
+        </ul>
+
+        <h4>2. Briefing</h4>
+        <ul>
+          <li>Apresente aos estudantes o tema do DMSP 2025 e a proposta do Escape Room.</li>
+          <li>Explique as regras gerais, a pontuação e as penalidades por erros ou extrapolação do tempo.</li>
+          <li>Mostre como funciona a navegação pelas 15 estações na plataforma.</li>
+        </ul>
+
+        <h4>3. Execução</h4>
+        <ul>
+          <li>Organize os estudantes em <strong>equipes de 3 a 5 integrantes</strong>.</li>
+          <li>Definam um <strong>líder</strong> responsável por se cadastrar na plataforma e gerenciar o progresso.</li>
+          <li>A atividade pode ser realizada em computadores ou tablets.</li>
+          <li>Incentive o <strong>trabalho colaborativo</strong> e a discussão em grupo.</li>
+          <li>Ao final, o líder gera o <strong>relatório da equipe</strong> na plataforma e envia ao professor.</li>
+        </ul>
+
+        <h4>4. Debriefing</h4>
+        <ul>
+          <li>Após todas as equipes completarem as 15 estações, conduza uma reflexão coletiva.</li>
+          <li>O debriefing deve durar entre <strong>20 e 40 minutos</strong>.</li>
+          <li>Incentive os alunos a discutirem erros, acertos e estratégias utilizadas.</li>
+          <li>Relacione os aprendizados com práticas reais de segurança do paciente.</li>
+        </ul>
+
+        <p class="mt-4">
+          Com esse percurso, o <em>Escape Room da Segurança do Paciente</em> torna-se uma ferramenta potente de ensino,
+          conectando teoria e prática de forma lúdica, interativa e alinhada ao tema global do DMSP 2025.
+        </p>
+
+        <div class="text-center mt-4">
+          <a href="{{ url_for('home_pt') if 'lang' not in session else url_for('home_' + session['lang']) }}"
+             class="btn btn-primary">
+            ← Voltar à Página Inicial
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

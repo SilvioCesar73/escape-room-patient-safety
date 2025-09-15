@@ -1,0 +1,79 @@
+{
+    "stations": [
+        {
+            "id": 1,
+            "title": "Identificação segura do recém-nascido",
+            "intro_message": "Você acaba de entrar na Maternidade - Berçário. Aqui, o primeiro cuidado é garantir que cada bebê seja identificado corretamente. O desafio vai mostrar como a pulseira de identificação é essencial para a segurança desde o nascimento."
+        },
+        {
+            "id": 2,
+            "title": "Administração de medicamentos pediátricos",
+            "intro_message": "Agora você está na Enfermaria Pediátrica. Crianças necessitam de doses exatas de medicamentos, calculadas pelo peso e idade. Seu desafio é organizar os passos para administrar medicamentos com segurança."
+        },
+        {
+            "id": 3,
+            "title": "Higienização das mãos",
+            "intro_message": "Você chegou à UTI Neonatal. Aqui, cada detalhe faz diferença para proteger os bebês prematuros. Sua missão é lembrar os momentos e a técnica correta de higienização das mãos."
+        },
+        {
+            "id": 4,
+            "title": "Segurança na nutrição enteral",
+            "intro_message": "Na Farmácia Hospitalar, o preparo de dietas enterais exige cuidado rigoroso. Seu desafio é relacionar práticas seguras que evitam riscos de infecção e complicações nutricionais."
+        },
+        {
+            "id": 5,
+            "title": "Monitorização Clínica em UTI Pediátrica",
+            "intro_message": "Você entrou na UTI Pediátrica. Aqui, sinais vitais precisam ser interpretados rapidamente. Seu desafio é reconhecer mudanças que podem indicar deterioração clínica."
+        },
+        {
+            "id": 6,
+            "title": "Prevenção de quedas em pediatria",
+            "intro_message": "Estamos de volta à Enfermaria Pediátrica. As quedas são eventos comuns e preveníveis. Monte o cenário para descobrir estratégias que protegem as crianças."
+        },
+        {
+            "id": 7,
+            "title": "Cuidados com dispositivos invasivos",
+            "intro_message": "Novamente na UTI Neonatal, encontramos bebês em uso de dispositivos invasivos. Sua missão é ordenar corretamente os passos para garantir uma punção segura e sem riscos."
+        },
+        {
+            "id": 8,
+            "title": "Comunicação efetiva (SBAR)",
+            "intro_message": "Na Sala de Enfermagem, a comunicação entre equipes salva vidas. Use a técnica SBAR para organizar as informações do caso clínico e evitar falhas de comunicação."
+        },
+        {
+            "id": 9,
+            "title": "Reconhecimento de sepse",
+            "intro_message": "Na UTI neonatal, cada minuto conta. O desafio é identificar sinais precoces de sepse em pacientes recém-nascidos, antes que a situação se agrave."
+        },
+        {
+            "id": 10,
+            "title": "Segurança na ventilação mecânica",
+            "intro_message": "Ainda na UTI Pediátrica, encontramos pacientes em ventilação mecânica. Seu desafio é garantir medidas de proteção que evitem complicações respiratórias graves."
+        },
+        {
+            "id": 11,
+            "title": "Segurança na transfusão sanguínea",
+            "intro_message": "Você entrou no Banco de Sangue. A segurança transfusional depende de checagens rigorosas. Seu desafio é ordenar corretamente as etapas para uma transfusão segura."
+        },
+        {
+            "id": 12,
+            "title": "Prevenção de lesão por pressão",
+            "intro_message": "Na Enfermaria, pacientes de risco precisam de vigilância constante. Sua missão é reconhecer e aplicar medidas para evitar lesões por pressão."
+        },
+        {
+            "id": 13,
+            "title": "Manejo da dor em neonatos",
+            "intro_message": "Voltamos ao cuidado neonatal. O manejo da dor nos recém-nascidos exige medidas farmacológicas e não farmacológicas. Seu desafio é correlacionar essas práticas."
+        },
+        {
+            "id": 14,
+            "title": "Passagem de plantão segura",
+            "intro_message": "Na sala multidisciplinar, a passagem de plantão precisa ser clara e estruturada. Monte o cenário ideal para garantir que nenhuma informação se perca."
+        },
+        {
+            "id": 15,
+            "title": "Checklist de cirurgia segura",
+            "intro_message": "Você chegou ao Centro Cirúrgico. Antes da cirurgia começar, todos devem revisar o checklist de segurança. Organize as etapas e garanta que o procedimento seja seguro."
+        }
+    ]
+}

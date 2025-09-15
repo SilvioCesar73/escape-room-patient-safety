@@ -1,0 +1,197 @@
+/* --- Layout geral dos desafios --- */
+.challenge-card {
+    max-width: 750px;
+    margin: 2rem auto;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Títulos e instruções */
+.challenge-card p.lead {
+    font-weight: 600;
+    text-align: center;
+}
+
+/* --- Quiz --- */
+.interactive-item {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 215, 0, 0.85);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s;
+    border: 2px solid white;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+}
+.interactive-item:hover {
+    transform: scale(1.15);
+    background: rgba(255, 165, 0, 0.9);
+}
+.interactive-item i {
+    font-size: 1.6rem;
+    color: white;
+}
+
+/* --- Ordering --- */
+#sortable-list {
+    padding: 0;
+    list-style: none;
+}
+#sortable-list li {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+    cursor: grab;
+    transition: background-color 0.2s;
+}
+#sortable-list li:active {
+    cursor: grabbing;
+    background: #e9ecef;
+}
+
+/* --- Memory --- */
+/* --- Memory --- */
+.memory-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+    justify-items: center;
+    margin-top: 1.5rem;
+}
+
+.memory-card {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 3/4; /* formato padrão tipo carta */
+    perspective: 1000px;
+    cursor: pointer;
+}
+
+.memory-card .card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+    border-radius: 10px;
+}
+
+.memory-card.flipped .card-inner {
+    transform: rotateY(180deg);
+}
+
+.memory-card .card-front,
+.memory-card .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* Frente (o verso azul que o jogador vê antes de virar) */
+.memory-card .card-front {
+    background: #0d6efd;
+    color: white;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+/* Verso (imagem revelada quando vira) */
+.memory-card .card-back {
+    background: #fff;
+    transform: rotateY(180deg);
+}
+
+.memory-card .card-back img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* garante proporção sem distorcer */
+    border-radius: 10px;
+}
+
+
+/* --- Matching --- */
+.term-box, .definition-box {
+    padding: 0.75rem;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.term-box {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+}
+.definition-box {
+    background: #fff;
+    border: 1px solid #ced4da;
+    min-height: 60px;
+}
+.term-assigned {
+    margin-top: 0.5rem;
+}
+
+/* --- Puzzle --- */
+.puzzle-grid {
+    display: grid;
+    gap: 0.5rem;
+}
+.puzzle-piece {
+    aspect-ratio: 1/1;
+    background-size: cover;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.puzzle-piece:hover {
+    transform: scale(1.05);
+}
+
+/* --- Wordsearch --- */
+.wordsearch-container {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+}
+.wordsearch-grid {
+    border-collapse: collapse;
+}
+.wordsearch-grid td {
+    width: 32px;
+    height: 32px;
+    text-align: center;
+    vertical-align: middle;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+}
+.wordsearch-grid td.selected {
+    background: #ffeeba;
+}
+.wordsearch-grid td.found {
+    background: #28a745;
+    color: white;
+}
+.wordsearch-container ul {
+    list-style: none;
+    padding: 0;
+}
+.wordsearch-container li {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}

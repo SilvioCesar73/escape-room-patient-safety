@@ -1,0 +1,37 @@
+<!-- /templates/index.html -->
+
+{% extends "base.html" %}
+{% block title %}{{ text.title }}{% endblock %}
+{% block content %}
+    <!-- Logotipos -->
+    <div class="row justify-content-center align-items-center mb-4">
+                <div class="col-md-5 text-center">
+            <img src="{{ url_for('static', filename='img/logotipo_wpsd_simweek.jpg') }}" 
+                 alt="Simulation Week 2025" class="img-fluid rounded shadow" style="max-height: 400px; width: auto;">
+        </div>
+    </div>
+
+    <h1 class="text-center mb-3">{{ text.title }}</h1>
+    <p class="lead text-center">{{ text.subtitle }}</p>
+
+    <div class="d-flex justify-content-center gap-3 mt-4">
+        <a href="{{ url_for('register') }}" class="btn btn-success btn-lg">{{ text.signup }}</a>
+        <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg">{{ text.login }}</a>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{{ url_for('technical_specifications') }}" class="me-3">📘 Créditos e Especificações técnicas</a>
+        <a href="{{ url_for('instructions_professors') }}" class="me-3">📘 Instruções para Professores</a>
+        <a href="{{ url_for('instructions_students') }}" class="me-3">📘 Instruções para Estudantes</a>
+        <a href="{{ url_for('references') }}" class="me-3">📚 Referências</a>
+        <a href="{{ url_for('terms') }}">📄 Termos de Uso</a>
+    </div>
+
+    <!-- Seletor de idiomas -->
+    <div class="text-center mt-4">
+        <span>{{ text.lang }}: </span>
+        <a href="{{ url_for('home_pt') }}">🇧🇷 PT</a> |
+        <a href="{{ url_for('home_en') }}">🇺🇸 EN</a> |
+        <a href="{{ url_for('home_es') }}">🇪🇸 ES</a>
+    </div>
+{% endblock %}

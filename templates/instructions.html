@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}{{ text.instructions }}{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <h1 class="text-center mb-4">{{ text.instructions }}</h1>
+        
+        <div class="card shadow">
+            <div class="card-body">
+                <h3>Como Jogar</h3>
+                <p>O Escape Room da Segurança do Paciente é uma experiência interativa projetada para educar profissionais de saúde sobre práticas de segurança do paciente.</p>
+                
+                <h4>Passo a Passo:</h4>
+                <ol>
+                    <li>Crie uma conta ou faça login no sistema</li>
+                    <li>Selecione um dos cenários disponíveis</li>
+                    <li>Resolva os desafios relacionados à segurança do paciente</li>
+                    <li>Colabore com sua equipe para encontrar soluções</li>
+                    <li>Aprenda com os feedbacks e melhore suas habilidades</li>
+                </ol>
+                
+                <h4>Regras:</h4>
+                <ul>
+                    <li>Cada cenário tem um tempo limite de 60 minutos</li>
+                    <li>Trabalhe em equipe para melhores resultados</li>
+                    <li>Anote suas descobertas e insights</li>
+                    <li>Respeite as opiniões e contribuições dos colegas</li>
+                </ul>
+                
+                <div class="text-center mt-4">
+                    <a href="{{ url_for('home_pt') if 'lang' not in session else url_for('home_' + session['lang']) }}" 
+                       class="btn btn-primary">
+                        Voltar à Página Inicial
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="text-center mt-4">
+    <a href="{{ url_for(return_to if return_to else 'home_pt') }}" class="btn btn-primary">
+        ← Voltar para o Dashboard
+    </a>
+</div>
+{% endblock %}

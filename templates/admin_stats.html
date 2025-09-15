@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Estatísticas de Administração{% endblock %}
+{% block content %}
+<div class="container">
+    <h1 class="text-center mb-4">Estatísticas do Site</h1>
+    
+    <div class="card shadow">
+        <div class="card-body">
+            <h3>Estatísticas dos últimos 7 dias</h3>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Pageviews</th>
+                        <th>Visitantes Únicos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for stat in stats %}
+                    <tr>
+                        <td>{{ stat.access_date }}</td>
+                        <td>{{ stat.page_views }}</td>
+                        <td>{{ stat.unique_visitors }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
