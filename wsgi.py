@@ -1,4 +1,4 @@
-# wsgi.py
-from init import create_app  # também sem ponto
+from my_app import create_app
 
+# cria a instância da aplicação
 app = create_app()

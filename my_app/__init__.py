@@ -9,6 +9,8 @@ from flask import Flask, render_template, redirect, url_for, request, session, j
 from flask_migrate import Migrate
 from .config import config
 from .models import db, User, PageViews, SiteAccess
+
+
 # Importa os dados dos desafios para serem usados nas rotas
 from .challenges_data import challenges
 
