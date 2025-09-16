@@ -25,7 +25,7 @@ challenges = {
         "timeLimit": 90, "points": 7, "background": "img/cenario-enfermaria.jpg",
         "requiredKey": "chave_estacao_1", "keyReward": "chave_estacao_2",
         "orderingData": {
-            "instructions": "Ordene os passos para a administração segura de medicamentos pediátricos.",
+            "instructions": "Ordene os passos para a administração segura de medicamentos pediátricos (Clique em um item e arraste-o até a nova posição).",
             "items": [
                 {"id": "p1", "text": "Verificar a prescrição médica e os '5 Certos'"},
                 {"id": "p2", "text": "Calcular a dose exata com base no peso da criança"},
@@ -47,7 +47,7 @@ challenges = {
         "requiredKey": "chave_estacao_2",
         "keyReward": "chave_estacao_3",
         "memoryData": {
-            "instructions": "Encontre os pares corretos para a higienização das mãos.",
+            "instructions": "Encontre os pares corretos para a higienização das mãos (Clique em dois cards que possuam a mesma imagem).",
             "images": [
                 "img/agua.jpg",
                 "img/sabonete.jpg",
@@ -67,7 +67,7 @@ challenges = {
         "timeLimit": 90, "points": 6, "background": "img/cenario-farmacia.jpg",
         "requiredKey": "chave_estacao_3", "keyReward": "chave_estacao_4",
         "matchingData": {
-            "instructions": "Correlacione os termos às suas definições corretas.",
+            "instructions": "Correlacione os termos às suas definições corretas (Clique em um item na coluna da esquerda e arraste-o até o seu complemento na coluna da direita).",
             "matches": [
                 {"term": "Verificação da sonda", "definition": "Deve ser feita antes de cada administração."},
                 {"term": "Bomba de infusão", "definition": "Garante controle rigoroso do volume e velocidade."},
@@ -157,7 +157,7 @@ challenges = {
         "timeLimit": 90, "points": 5, "background": "img/cenario-enfermaria.jpg",
         "requiredKey": "chave_estacao_5", "keyReward": "chave_estacao_6",
         "puzzleData": {
-            "instructions": "Monte a imagem para revelar a cena de prevenção de quedas.",
+            "instructions": "Monte a imagem para revelar a cena de prevenção de quedas (1º: Clique em uma peça; 2º: Clique na posição para onde deseja movê-la).",
             "image": "img/prevencao_quedas_puzzle.jpg", "pieces": 9
         }
     },
@@ -168,7 +168,7 @@ challenges = {
         "timeLimit": 120, "points": 8, "background": "img/cenario-uti.jpg",
         "requiredKey": "chave_estacao_6", "keyReward": "chave_estacao_7",
         "orderingData": {
-            "instructions": "Ordene os passos para a punção segura de uma veia periférica.",
+            "instructions": "Ordene os passos para a punção segura de uma veia periférica (Clique em um item e arraste-o até a nova posição).",
             "items": [
                 {"id": "p1", "text": "Higienizar as mãos"},
                 {"id": "p2", "text": "Separar e preparar o material"},
@@ -189,7 +189,7 @@ challenges = {
         "timeLimit": 60, "points": 5, "background": "img/cenario-sala-enfermagem.jpg",
         "requiredKey": "chave_estacao_7", "keyReward": "chave_estacao_8",
         "matchingData": {
-            "instructions": "Correlacione cada informação à etapa correta do SBAR.",
+            "instructions": "Correlacione cada informação à etapa correta do SBAR (Clique em um item na coluna da esquerda e arraste-o até o seu complemento na coluna da direita).",
             "matches": [
                 {"term": "S - Situação", "definition": "João, leito 1, apresentou febre de 38.5°C."},
                 {"term": "B - Breve Histórico", "definition": "5 anos, internado por pneumonia, em uso de antibiótico."},
@@ -205,7 +205,7 @@ challenges = {
         "timeLimit": 120, "points": 6, "background": "img/cenario-uti.jpg",
         "requiredKey": "chave_estacao_8", "keyReward": "chave_estacao_9",
         "wordsearchData": {
-            "instructions": "Encontre os sinais de sepse em neonatos.",
+            "instructions": "Encontre os sinais de sepse em neonatos (Clique na primeira letra da palavra encontrada, segure e arrasta até a última letra).",
             "words": ["FEBRE", "HIPOTERMIA", "TAQUICARDIA", "LETARGIA", "GEMENCIA"],
             "gridSize": 14
         }
@@ -234,7 +234,7 @@ challenges = {
         "timeLimit": 60, "points": 8, "background": "img/cenario-banco-sangue.jpg",
         "requiredKey": "chave_estacao_10", "keyReward": "chave_estacao_11",
         "orderingData": {
-            "instructions": "Ordene os passos para uma transfusão de hemoderivado segura.",
+            "instructions": "Ordene os passos para uma transfusão de hemoderivado segura (Clique em um item e arraste-o até a nova posição).",
             "items": [
                 {"id": "p1", "text": "Checar prescrição e consentimento"},
                 {"id": "p2", "text": "Verificar sinais vitais pré-transfusionais"},
@@ -258,7 +258,7 @@ challenges = {
         "requiredKey": "chave_estacao_11",
         "keyReward": "chave_estacao_12",
         "memoryData": {
-            "instructions": "Encontre os pares relacionados à prevenção de lesão por pressão.",
+            "instructions": "Encontre os pares relacionados à prevenção de lesão por pressão (Clique em dois cards que possuam a mesma imagem).",
             "images": [
                 "img/inspecao.png",
                 "img/coxins.png",
@@ -281,7 +281,7 @@ challenges = {
         "requiredKey": "chave_estacao_12",
         "keyReward": "chave_estacao_13",
         "matchingData": {
-            "instructions": "Associe cada medida de manejo da dor em neonatos à sua categoria correta.",
+            "instructions": "Associe cada medida de manejo da dor em neonatos à sua categoria correta (Clique em um item na coluna da esquerda e arraste-o até o seu complemento na coluna da direita).",
             "matches": [
                 {"term": "Sucção não nutritiva", "definition": "Medida de conforto sensorial"},
                 {"term": "Glicose oral", "definition": "Medida adjuvante não farmacológica"},
@@ -299,7 +299,7 @@ challenges = {
         "timeLimit": 120, "points": 5, "background": "img/cenario-sala-enfermagem.jpg",
         "requiredKey": "chave_estacao_13", "keyReward": "chave_estacao_14",
         "puzzleData": {
-            "instructions": "Monte a imagem que representa uma passagem de plantão eficaz.",
+            "instructions": "Monte a imagem que representa uma passagem de plantão eficaz (1º: Clique em uma peça; 2º: Clique na posição para onde deseja movê-la).",
             "image": "img/passagem_plantao_puzzle.jpg", "pieces": 9
         }
     },
@@ -314,7 +314,7 @@ challenges = {
         "requiredKey": "chave_estacao_14",
         "keyReward": "chave_estacao_15",
         "orderingData": {
-            "instructions": "Organize na ordem correta as etapas fundamentais de segurança cirúrgica.",
+            "instructions": "Organize na ordem correta as etapas fundamentais de segurança cirúrgica (Clique em um item e arraste-o até a nova posição).",
             "items": [
                 {"id": "p1", "text": "Assinatura do termo de consentimento pelos pais/responsáveis"},
                 {"id": "p2", "text": "Checagem de paciente, sítio e alergias (antes da indução anestésica)"},
