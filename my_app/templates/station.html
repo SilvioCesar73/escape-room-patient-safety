@@ -528,83 +528,100 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // Gerenciador de Timer Global Persistente
-        class GlobalTimerManager {
-            constructor( ) {
-                this.timerElement = document.getElementById('main-timer');
-                this.globalTimerElement = document.getElementById('global-timer');
-                this.startTimeKey = 'escaperoom_start_time';
-                this.totalDuration = 26 * 60; // 26 minutos em segundos
-                this.timerInterval = null;
-                
-                this.init();
-            }
-            
-            init() {
-                const startTime = localStorage.getItem(this.startTimeKey);
-                
-                if (startTime) {
-                    this.resumeTimer(parseInt(startTime));
-                } else {
-                    this.startNewTimer();
-                }
-            }
-            
-            startNewTimer() {
-                const startTime = Date.now();
-                localStorage.setItem(this.startTimeKey, startTime.toString());
-                this.resumeTimer(startTime);
-            }
-            
-            resumeTimer(startTime) {
-                if (!this.timerElement) return;
-                
-                const updateTimer = () => {
-                    const currentTime = Date.now();
-                    const elapsedSeconds = Math.floor((currentTime - startTime) / 1000);
-                    const timeLeft = Math.max(0, this.totalDuration - elapsedSeconds);
-                    
-                    if (timeLeft <= 0) {
-                        this.onTimerEnd();
-                        return;
-                    }
-                    
-                    this.updateDisplay(timeLeft);
-                    this.updateTimerStyle(timeLeft);
-                };
-                
-                updateTimer();
-                this.timerInterval = setInterval(updateTimer, 1000);
-            }
-            
-            updateDisplay(timeLeft) {
-                const minutes = Math.floor(timeLeft / 60);
-                const seconds = timeLeft % 60;
-                this.timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            }
-            
-            updateTimerStyle(timeLeft) {
-                this.globalTimerElement.classList.remove('timer-warning', 'timer-danger');
-                
-                if (timeLeft <= 60) { // Último minuto
-                    this.globalTimerElement.classList.add('timer-danger');
-                } else if (timeLeft <= 300) { // Últimos 5 minutos
-                    this.globalTimerElement.classList.add('timer-warning');
-                }
-            }
-            
-            onTimerEnd() {
-                clearInterval(this.timerInterval);
-                this.timerElement.textContent = "00:00";
-                this.globalTimerElement.classList.add('timer-danger');
-                alert('Tempo esgotado! O Escape Room foi finalizado.');
-                // Opcional: redirecionar para uma página de resultados
-                // window.location.href = '/results';
-            }
+    // Gerenciador de Timer Global Persistente (corrigido)
+    class GlobalTimerManager {
+        constructor() {
+        this.timerElement = document.getElementById('main-timer');
+        this.globalTimerElement = document.getElementById('global-timer');
+        this.startTimeKey = 'escaperoom_start_time';
+        this.totalDuration = 26 * 60; // 26 minutos em segundos
+        this.timerInterval = null;
+
+        // Opcional: deixa o display coerente já no carregamento
+        if (this.timerElement) {
+            this.timerElement.textContent = "26:00";
         }
-        
-        document.addEventListener('DOMContentLoaded', () => new GlobalTimerManager());
+
+        this.init();
+        }
+
+        init() {
+        const stored = localStorage.getItem(this.startTimeKey);
+        const startTime = stored ? parseInt(stored, 10) : NaN;
+
+        // Se não houver startTime, for inválido, ou já tiver estourado => recomeça
+        if (!Number.isFinite(startTime) || this._isExpired(startTime)) {
+            this.startNewTimer();
+        } else {
+            this.resumeTimer(startTime);
+        }
+        }
+
+        startNewTimer() {
+        const startTime = Date.now();
+        localStorage.setItem(this.startTimeKey, String(startTime));
+        this.resumeTimer(startTime);
+        }
+
+        resumeTimer(startTime) {
+        if (!this.timerElement) return;
+
+        const updateTimer = () => {
+            const elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+            const timeLeft = Math.max(0, this.totalDuration - elapsedSeconds);
+
+            if (timeLeft <= 0) {
+            this.onTimerEnd();
+            return;
+            }
+
+            this.updateDisplay(timeLeft);
+            this.updateTimerStyle(timeLeft);
+        };
+
+        updateTimer();
+        clearInterval(this.timerInterval);
+        this.timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        updateDisplay(timeLeft) {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        this.timerElement.textContent =
+            `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        updateTimerStyle(timeLeft) {
+        this.globalTimerElement.classList.remove('timer-warning', 'timer-danger');
+
+        if (timeLeft <= 60) {
+            this.globalTimerElement.classList.add('timer-danger');
+        } else if (timeLeft <= 300) {
+            this.globalTimerElement.classList.add('timer-warning');
+        }
+        }
+
+        onTimerEnd() {
+        clearInterval(this.timerInterval);
+        // 🔧 remove a âncora do cronômetro para não "ficar preso" em 00:00
+        localStorage.removeItem(this.startTimeKey);
+
+        if (this.timerElement) this.timerElement.textContent = "00:00";
+        if (this.globalTimerElement) this.globalTimerElement.classList.add('timer-danger');
+
+        alert('Tempo esgotado! O Escape Room foi finalizado.');
+        // window.location.href = '/results'; // se desejar
+        }
+
+        _isExpired(startTime) {
+        const elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+        return elapsedSeconds >= this.totalDuration;
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => new GlobalTimerManager());
     </script>
+
 
     <!-- 🔑 LÓGICA DE DESBLOQUEIO DAS ESTAÇÕES (CORRIGIDO) 🔑 -->
     <!-- Carrega o gerenciador da API primeiro, pois o script seguinte depende dele -->
