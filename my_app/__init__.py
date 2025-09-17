@@ -428,7 +428,7 @@ def create_app(config_name='development'):
         pdfmetrics.registerFont(TTFont("DejaVu-Bold",   os.path.join(fonts_dir, "DejaVuSans-Bold.ttf")))
         pdfmetrics.registerFont(TTFont("DejaVu-Italic", os.path.join(fonts_dir, "DejaVuSans-Oblique.ttf")))
 
-        # Helpers de layout
+        # Helpers
         def wrap_draw(p, text, x, y, max_width, font="DejaVu", size=10, lh=14):
             line = ""
             for word in (text or "").split():
@@ -518,13 +518,38 @@ def create_app(config_name='development'):
         else:
             achievement = "—"
 
-        p.setFont("DejaVu", 10)
-        p.setFillColor(colors.black)
-        for r in results:
-            p.drawString(50, y, f"Estação {r.station_id}: {r.score} pontos, Tempo: {r.time_spent}s")
-            y -= 15
+        # >>> NOVO: Tabela com 6 colunas (Estação | Pontos | Tempo) em 2 blocos (1–8 e 9–15)
+        from reportlab.platypus import Table, TableStyle
+        data = [["Estação", "Pontos", "Tempo (s)", "Estação", "Pontos", "Tempo (s)"]]
 
-        y -= 10
+        left = [r for r in results if r.station_id <= 8]
+        right = [r for r in results if r.station_id > 8]
+
+        for i in range(8):
+            left_r = left[i] if i < len(left) else None
+            right_r = right[i] if i < len(right) else None
+            row = [
+                left_r.station_id if left_r else "",
+                left_r.score if left_r else "",
+                left_r.time_spent if left_r else "",
+                right_r.station_id if right_r else "",
+                right_r.score if right_r else "",
+                right_r.time_spent if right_r else "",
+            ]
+            data.append(row)
+
+        table = Table(data, colWidths=[50, 50, 60, 50, 50, 60])
+        table.setStyle(TableStyle([
+            ("GRID", (0,0), (-1,-1), 0.5, colors.grey),
+            ("BACKGROUND", (0,0), (-1,0), colors.lightgrey),
+            ("FONTNAME", (0,0), (-1,0), "DejaVu-Bold"),
+            ("ALIGN", (0,0), (-1,-1), "CENTER"),
+        ]))
+        table.wrapOn(p, width, height)
+        table.drawOn(p, 50, y - (15 * len(data)))
+        y -= (15 * (len(data) + 2))
+
+        p.setFont("DejaVu", 10)
         p.drawString(50, y, f"Pontuação Total: {total_score}")
         y -= 15
         p.drawString(50, y, f"Tempo Total: {total_time//3600}h {(total_time%3600)//60}m")
@@ -549,19 +574,21 @@ def create_app(config_name='development'):
             p.drawString(50, y, f"Tipo de participação: {evaluation.participation_type}")
             y -= 15
 
-            # Equipe
+            # >>> NOVO: Equipe em linha única
             team_list = []
             try:
                 team_list = pyjson.loads(evaluation.team) if evaluation.team else []
             except Exception:
                 team_list = [evaluation.team] if evaluation.team else []
 
-            p.drawString(50, y, "Equipe:")
-            y -= 15
-            for member in team_list:
-                y = wrap_draw(p, f"• {member}", 60, y, width - 100, font="DejaVu", size=10)
+            if team_list:
+                equipe_formatada = ", ".join(team_list)
+                p.drawString(50, y, f"Equipe: {equipe_formatada}")
+                y -= 15
+            else:
+                p.drawString(50, y, "Equipe: —")
+                y -= 15
 
-            y -= 10
             p.drawString(50, y, f"Q1 - Facilidade de uso: {evaluation.q1}")
             y -= 15
             p.drawString(50, y, f"Q2 - Aprendizado: {evaluation.q2}")
@@ -603,6 +630,7 @@ def create_app(config_name='development'):
                 "Content-Disposition": "attachment; filename=relatorio.pdf"
             },
         )
+
 
 
 
