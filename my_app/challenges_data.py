@@ -139,11 +139,11 @@ challenges = {
         },
         {
             "id": "q5",
-            "text": "A saturação de O₂ em neonatos deve ser mantida preferencialmente:",
+            "text": "Para um recém-nascido a termo saudável em ar ambiente, qual é a faixa de saturação de oxigênio (SpO₂) considerada normal?",
             "options": [
-                {"id": "a", "text": "Entre 90% e 95%"},
-                {"id": "b", "text": "Sempre acima de 100%"},
-                {"id": "c", "text": "Abaixo de 85% para evitar hiperóxia"}
+                {"id": "a", "text": "Entre 92% e 96%"},
+                {"id": "b", "text": "Sempre acima de 98%"},
+                {"id": "c", "text": "Abaixo de 90%"}
             ],
             "correctAnswer": "a"
         }

@@ -53,14 +53,60 @@ def create_app(config_name='development'):
     translations = load_translations()
     
     professions = {
-        'pt': ["Médico", "Enfermeiro", "Farmacêutico", "Técnico de Enfermagem", "Estudante", "Outro"],
-        'en': ["Doctor", "Nurse", "Pharmacist", "Nursing Technician", "Student", "Other"],
-        'es': ["Médico", "Enfermero", "Farmacéutico", "Técnico de Enfermería", "Estudiante", "Otro"]
+        'pt': [
+            "Enfermeiro", "Médico", "Farmacêutico", "Técnico de Enfermagem", "Estudante",
+            "Fisioterapeuta", "Nutricionista", "Psicólogo", "Dentista", "Terapeuta Ocupacional",
+            "Fonoaudiólogo", "Biomédico", "Assistente Social", "Paramédico", "Radiologista",
+            "Sanitarista", "Obstetra", "Ginecologista", "Pediatra", "Outro"
+        ],
+        'en': [
+            "Nurse", "Doctor", "Pharmacist", "Nursing Technician", "Student",
+            "Physiotherapist", "Nutritionist", "Psychologist", "Dentist", "Occupational Therapist",
+            "Speech Therapist", "Biomedical Scientist", "Social Worker", "Paramedic", "Radiologist",
+            "Public Health Specialist", "Obstetrician", "Gynecologist", "Pediatrician", "Other"
+        ],
+        'es': [
+            "Enfermero", "Médico", "Farmacéutico", "Técnico de Enfermería", "Estudiante",
+            "Fisioterapeuta", "Nutricionista", "Psicólogo", "Dentista", "Terapeuta Ocupacional",
+            "Fonoaudiólogo", "Biomédico", "Trabajador Social", "Paramédico", "Radiólogo",
+            "Sanitarista", "Obstetra", "Ginecólogo", "Pediatra", "Otro"
+        ]
     }
+
     countries = {
-        'pt': ["Brasil", "Portugal", "Estados Unidos", "Espanha", "Argentina", "Outro"],
-        'en': ["Brazil", "Portugal", "United States", "Spain", "Argentina", "Other"],
-        'es': ["Brasil", "Portugal", "Estados Unidos", "España", "Argentina", "Otro"]
+        'pt': [
+            # Américas
+            "Brasil", "Argentina", "Chile", "Uruguai", "Paraguai", "Bolívia", "Peru", "Equador",
+            "Colômbia", "Venezuela", "Guiana", "Suriname", "México", "Canadá", "Estados Unidos",
+            "Costa Rica", "Panamá", "Cuba", "República Dominicana", "Honduras", "Guatemala",
+            "El Salvador", "Nicarágua", "Haiti", "Jamaica",
+            # Europa
+            "Portugal", "Espanha", "Europa",
+            # Outros continentes
+            "Ásia", "África", "Oceania", "Outro"
+        ],
+        'en': [
+            # Americas
+            "Brazil", "Argentina", "Chile", "Uruguay", "Paraguay", "Bolivia", "Peru", "Ecuador",
+            "Colombia", "Venezuela", "Guyana", "Suriname", "Mexico", "Canada", "United States",
+            "Costa Rica", "Panama", "Cuba", "Dominican Republic", "Honduras", "Guatemala",
+            "El Salvador", "Nicaragua", "Haiti", "Jamaica",
+            # Europe
+            "Portugal", "Spain", "Europe",
+            # Other continents
+            "Asia", "Africa", "Oceania", "Other"
+        ],
+        'es': [
+            # Américas
+            "Brasil", "Argentina", "Chile", "Uruguay", "Paraguay", "Bolivia", "Perú", "Ecuador",
+            "Colombia", "Venezuela", "Guyana", "Surinam", "México", "Canadá", "Estados Unidos",
+            "Costa Rica", "Panamá", "Cuba", "República Dominicana", "Honduras", "Guatemala",
+            "El Salvador", "Nicaragua", "Haití", "Jamaica",
+            # Europa
+            "Portugal", "España", "Europa",
+            # Otros continentes
+            "Asia", "África", "Oceanía", "Otro"
+        ]
     }
 
     @app.context_processor

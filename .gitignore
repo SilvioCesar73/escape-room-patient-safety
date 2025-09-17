@@ -1,0 +1,14 @@
+# Cache do Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Ambiente virtual
+venv/
+.env
+
+# Banco SQLite local
+instance/*.db
+
+# Configuração de IDE
+.vscode/
